@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -37,9 +39,12 @@ public class BattlesweeperApp extends Application {
     private Tile[][] grid = new Tile[X_TILES][Y_TILES];
     private Scene scene;
     
+    //승리 조건을 임시로 계산하기 위한 변수
     private int bombCount=0;
     private int count=0;
     
+    Image image = new Image("E:\\Users\\golde\\eclipse-workspace_test\\BattleSweeper\\BattleSweeper\\src\\BattleSweeper\\icon\\tile.png");
+   
  
     private Parent createContent() {
     	//지뢰 카운트 초기화
@@ -49,6 +54,8 @@ public class BattlesweeperApp extends Application {
     		
 
     	GridPane root = new GridPane();
+    	
+    	
         root.setPrefSize(W, H);
         //타일 시작 위치
         root.setLayoutX(50);
@@ -62,6 +69,7 @@ public class BattlesweeperApp extends Application {
 
                 grid[x][y] = tile;
                 root.getChildren().add(tile);
+                root.add(new ImageView(image), x, y); //이미지 추가부분, 개선 필요함
             }
         }
 
@@ -183,6 +191,7 @@ public class BattlesweeperApp extends Application {
     // stackpane을 사용했지만 둘 다 불러와지지 않고 게임이 덮어씌워지는 문제가 있음.
     public void start(Stage stage) throws Exception {
         try {
+        	
         	StackPane Background = FXMLLoader.load(getClass().getResource("GameImage.fxml"));
         	Label labelOne = new Label("One");
         	Background.getChildren().add(labelOne);
