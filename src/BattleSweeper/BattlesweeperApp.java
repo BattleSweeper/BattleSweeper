@@ -43,7 +43,8 @@ public class BattlesweeperApp extends Application {
     private int bombCount=0;
     private int count=0;
     
-    Image image = new Image("E:\\Users\\golde\\eclipse-workspace_test\\BattleSweeper\\BattleSweeper\\src\\BattleSweeper\\icon\\tile.png");
+    //타일 이미지 경로
+    Image image = new Image("\\BattleSweeper\\icon\\tile.png");
    
  
     private Parent createContent() {
