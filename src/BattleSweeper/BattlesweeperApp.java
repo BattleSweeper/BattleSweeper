@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -13,6 +15,7 @@ import javafx.scene.SubScene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,6 +27,7 @@ import javafx.stage.Stage;
 
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 
 public class BattlesweeperApp extends Application {
@@ -44,10 +48,20 @@ public class BattlesweeperApp extends Application {
     private int count=0;
     
     //타일 이미지 경로
-    Image image = new Image("\\BattleSweeper\\icon\\tile.png");
+    Image RevealedImage_path = new Image("\\BattleSweeper\\icon\\Revealed.png");
+    Image Tileimage_path = new Image("\\BattleSweeper\\icon\\tile.png");
+    Image Numberimage_path1 = new Image("\\BattleSweeper\\icon\\one.png");
+    Image Numberimage_path2 = new Image("\\BattleSweeper\\icon\\Two.png");
+    Image Numberimage_path3 = new Image("\\BattleSweeper\\icon\\Three.png");
+    Image Numberimage_path4 = new Image("\\BattleSweeper\\icon\\Four.png");
+    Image Numberimage_path5 = new Image("\\BattleSweeper\\icon\\Five.png");
+    
+    Image FlaggedImage_path = new Image("\\BattleSweeper\\icon\\Flagged.png");
+    
    
  
     private Parent createContent() {
+    	
     	//지뢰 카운트 초기화
     	bombCount = 0;
     	count=0;
@@ -66,11 +80,12 @@ public class BattlesweeperApp extends Application {
 
         for (int y = 0; y < Y_TILES; y++) {
             for (int x = 0; x < X_TILES; x++) {
-                Tile tile = new Tile(x, y, Math.random() < 0.2);
+            	
+            	double randomNumber = Math.random();
+                Tile tile = new Tile(x, y, randomNumber < 0.2);
 
                 grid[x][y] = tile;
                 root.getChildren().add(tile);
-                root.add(new ImageView(image), x, y); //이미지 추가부분, 개선 필요함
             }
         }
 
@@ -86,10 +101,24 @@ public class BattlesweeperApp extends Application {
                 long bombs = getNeighbors(tile).stream().filter(t -> t.hasBomb).count();
              
 
-                if (bombs > 0) {
+                if (bombs == 1) {
                     tile.text.setText(String.valueOf(bombs));
-                    
+                    tile.getChildren().add(new ImageView(Numberimage_path1)); 
+                }else if(bombs == 2) {
+                	tile.text.setText(String.valueOf(bombs));
+                	tile.getChildren().add(new ImageView(Numberimage_path2)); 
+                }else if(bombs == 3) {
+                	tile.text.setText(String.valueOf(bombs));
+                	tile.getChildren().add(new ImageView(Numberimage_path3)); 
+                }else if(bombs == 4) {
+                	tile.text.setText(String.valueOf(bombs));
+                	tile.getChildren().add(new ImageView(Numberimage_path4)); 
+                }else if(bombs == 5) {
+                	tile.text.setText(String.valueOf(bombs));
+                	tile.getChildren().add(new ImageView(Numberimage_path5)); 
                 }
+                
+                
             }
         }
         
@@ -136,29 +165,84 @@ public class BattlesweeperApp extends Application {
         private boolean hasBomb;
         private boolean isOpen = false;
         
+        
+        
         //검정 타일
-        private Rectangle border = new Rectangle(TILE_SIZE - 5, TILE_SIZE - 5);
+        private Rectangle border = new Rectangle();
         private Text text = new Text();
+        
+        private ImageView RevealedImage = new ImageView();
+        private ImageView TileImage = new ImageView();
+        
+        private ImageView NumberImage = new ImageView();
+        private ImageView FlaggedImage = new ImageView();
 
         public Tile(int x, int y, boolean hasBomb) {
+        	
+        	//이미지 로드 부분
+        	
+        	RevealedImage.setImage(RevealedImage_path);
+            RevealedImage.setFitWidth(72);
+            RevealedImage.setPreserveRatio(true);
+            RevealedImage.setSmooth(true);
+            RevealedImage.setCache(true);
+            
+            TileImage.setImage(Tileimage_path);
+            TileImage.setFitWidth(72);
+            TileImage.setPreserveRatio(true);
+            TileImage.setSmooth(true);
+            TileImage.setCache(true);
+            
+            
+            NumberImage.setImage(Numberimage_path1);
+            NumberImage.setFitWidth(72);
+            NumberImage.setPreserveRatio(true);
+            NumberImage.setSmooth(true);
+            NumberImage.setCache(true);
+            NumberImage.setVisible(false);
+            
+            FlaggedImage.setImage(FlaggedImage_path);
+            FlaggedImage.setFitWidth(72);
+            FlaggedImage.setPreserveRatio(true);
+            FlaggedImage.setSmooth(true);
+            FlaggedImage.setCache(true);
+            FlaggedImage.setVisible(false);
+            
+           
             this.x = x;
             this.y = y;
             this.hasBomb = hasBomb;
-
+            
             border.setStroke(Color.LIGHTGRAY);
+            getChildren().add(RevealedImage);  
+            getChildren().add(TileImage); 
+            getChildren().add(FlaggedImage);
+            
 
             text.setFont(Font.font(18));
             text.setText(hasBomb ? "X" : "");
             text.setVisible(false);
+            
+            
 
             getChildren().addAll(border, text);
+            
 
             setTranslateX(x * TILE_SIZE);
             setTranslateY(y * TILE_SIZE);
             
             //이벤트 처리부분
 
-            setOnMouseClicked(e -> open());
+            setOnMouseClicked(e-> {
+                if (e.getButton() == MouseButton.PRIMARY) {
+                   open();
+
+                } else if (e.getButton() == MouseButton.SECONDARY) { 
+                	flag();
+                }
+
+            });
+            
         }
 
         public void open() {
@@ -174,44 +258,53 @@ public class BattlesweeperApp extends Application {
             isOpen = true;
             count++;
             text.setVisible(true);
+            TileImage.setVisible(false);
+            NumberImage.setVisible(true);
             border.setFill(null);
+            
 
             if (text.getText().isEmpty()) {
                 getNeighbors(this).forEach(Tile::open);
             }
+            
+        }
+        
+        public void flag() {
+            if (isOpen)
+                return;
+
+            FlaggedImage.setVisible(true);
+
             
             while (count>=X_TILES*Y_TILES-bombCount) { 
             	System.out.println("You Win!");
             	break;
             }
         }
+        
+        //FXML 파일을 로드하는 코드? 검토가 필요함
+        @FXML Pane secPane;
+        public void loadFxml (ActionEvent event) {
+        Pane newLoadedPane;
+    	try {
+    		newLoadedPane = FXMLLoader.load(getClass().getResource("GameImage.fxml"));
+    		secPane.getChildren().add(newLoadedPane); 
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+        
+        }  
     }
     
     
     // FXML 및 게임 로드 부분
     // stackpane을 사용했지만 둘 다 불러와지지 않고 게임이 덮어씌워지는 문제가 있음.
     public void start(Stage stage) throws Exception {
-        try {
-        	
-        	StackPane Background = FXMLLoader.load(getClass().getResource("GameImage.fxml"));
-        	Label labelOne = new Label("One");
-        	Background.getChildren().add(labelOne);
-        	SubScene subSceneOne = new SubScene(Background,300,100);
-            
-        	StackPane layoutTwo = new StackPane(createContent());
-            Label labelTwo = new Label("Two");
-            layoutTwo.getChildren().add(labelTwo);
-            SubScene subSceneTwo = new SubScene(layoutTwo,800,800);
-           
-            VBox root = new VBox(10);
-            root.setAlignment(Pos.CENTER);
-            root.getChildren().addAll(subSceneOne,subSceneTwo);
-            Scene mainScene = new Scene(root,1000,1000);
-            stage.setScene(mainScene);
+            scene = new Scene(createContent());
+            stage.setScene(scene);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+      
     	
         
     }
