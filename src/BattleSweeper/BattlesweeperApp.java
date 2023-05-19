@@ -24,13 +24,16 @@ import javafx.scene.text.Font;
 
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import javafx.stage.Window;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 
 public class BattlesweeperApp extends Application {
+	
+	private ImageView TopBarImage = new ImageView();
 	
 
     private static final int TILE_SIZE = 75;
@@ -47,6 +50,9 @@ public class BattlesweeperApp extends Application {
     private int bombCount=0;
     private int count=0;
     
+    //이미지 경로
+    Image TopBar_path = new Image("\\BattleSweeper\\icon\\TopBar.png");
+    
     //타일 이미지 경로
     Image RevealedImage_path = new Image("\\BattleSweeper\\icon\\Revealed.png");
     Image Tileimage_path = new Image("\\BattleSweeper\\icon\\tile.png");
@@ -57,6 +63,9 @@ public class BattlesweeperApp extends Application {
     Image Numberimage_path5 = new Image("\\BattleSweeper\\icon\\Five.png");
     
     Image FlaggedImage_path = new Image("\\BattleSweeper\\icon\\Flagged.png");
+    
+    public Window window;
+    
     
    
  
@@ -103,19 +112,19 @@ public class BattlesweeperApp extends Application {
 
                 if (bombs == 1) {
                     tile.text.setText(String.valueOf(bombs));
-                    tile.getChildren().add(new ImageView(Numberimage_path1)); 
+                    tile.getChildren().add(tile.NumberImage1); 
                 }else if(bombs == 2) {
                 	tile.text.setText(String.valueOf(bombs));
-                	tile.getChildren().add(new ImageView(Numberimage_path2)); 
+                	tile.getChildren().add(tile.NumberImage2);  
                 }else if(bombs == 3) {
                 	tile.text.setText(String.valueOf(bombs));
-                	tile.getChildren().add(new ImageView(Numberimage_path3)); 
+                	tile.getChildren().add(tile.NumberImage3); 
                 }else if(bombs == 4) {
                 	tile.text.setText(String.valueOf(bombs));
-                	tile.getChildren().add(new ImageView(Numberimage_path4)); 
+                	tile.getChildren().add(tile.NumberImage4); 
                 }else if(bombs == 5) {
                 	tile.text.setText(String.valueOf(bombs));
-                	tile.getChildren().add(new ImageView(Numberimage_path5)); 
+                	tile.getChildren().add(tile.NumberImage5); 
                 }
                 
                 
@@ -158,6 +167,7 @@ public class BattlesweeperApp extends Application {
         }
 
         return neighbors;
+        
     }
 
     private class Tile extends StackPane {
@@ -165,7 +175,7 @@ public class BattlesweeperApp extends Application {
         private boolean hasBomb;
         private boolean isOpen = false;
         
-        
+		
         
         //검정 타일
         private Rectangle border = new Rectangle();
@@ -174,12 +184,19 @@ public class BattlesweeperApp extends Application {
         private ImageView RevealedImage = new ImageView();
         private ImageView TileImage = new ImageView();
         
-        private ImageView NumberImage = new ImageView();
+        private ImageView NumberImage1 = new ImageView();
+        private ImageView NumberImage2 = new ImageView();
+        private ImageView NumberImage3 = new ImageView();
+        private ImageView NumberImage4 = new ImageView();
+        private ImageView NumberImage5 = new ImageView();
+        
         private ImageView FlaggedImage = new ImageView();
 
         public Tile(int x, int y, boolean hasBomb) {
         	
         	//이미지 로드 부분
+        	
+        	
         	
         	RevealedImage.setImage(RevealedImage_path);
             RevealedImage.setFitWidth(72);
@@ -194,12 +211,17 @@ public class BattlesweeperApp extends Application {
             TileImage.setCache(true);
             
             
-            NumberImage.setImage(Numberimage_path1);
-            NumberImage.setFitWidth(72);
-            NumberImage.setPreserveRatio(true);
-            NumberImage.setSmooth(true);
-            NumberImage.setCache(true);
-            NumberImage.setVisible(false);
+            NumberImage1.setImage(Numberimage_path1);
+            NumberImage1.setVisible(false);
+            NumberImage2.setImage(Numberimage_path2);
+            NumberImage2.setVisible(false);
+            NumberImage3.setImage(Numberimage_path3);
+            NumberImage3.setVisible(false);
+            NumberImage4.setImage(Numberimage_path4);
+            NumberImage4.setVisible(false);
+            NumberImage5.setImage(Numberimage_path5);
+            NumberImage5.setVisible(false);
+            
             
             FlaggedImage.setImage(FlaggedImage_path);
             FlaggedImage.setFitWidth(72);
@@ -235,7 +257,7 @@ public class BattlesweeperApp extends Application {
 
             setOnMouseClicked(e-> {
                 if (e.getButton() == MouseButton.PRIMARY) {
-                   open();
+                    open();
 
                 } else if (e.getButton() == MouseButton.SECONDARY) { 
                 	flag();
@@ -251,15 +273,19 @@ public class BattlesweeperApp extends Application {
 
             if (hasBomb) {
                System.out.println("Game Over");
-               //scene.setRoot(createContent()); 게임 재시작, 오류 발생하는 부분
+               scene.setRoot(createContent());
                return;
             }
 
             isOpen = true;
-            count++;
-            text.setVisible(true);
+            
             TileImage.setVisible(false);
-            NumberImage.setVisible(true);
+            NumberImage1.setVisible(true);
+            NumberImage2.setVisible(true);
+            NumberImage3.setVisible(true);
+            NumberImage4.setVisible(true);
+            NumberImage5.setVisible(true);
+            
             border.setFill(null);
             
 
@@ -272,44 +298,38 @@ public class BattlesweeperApp extends Application {
         public void flag() {
             if (isOpen)
                 return;
+            
+            if (hasBomb) {
+                count++;
+             }
 
             FlaggedImage.setVisible(true);
 
             
-            while (count>=X_TILES*Y_TILES-bombCount) { 
+            while (count>=bombCount) { 
             	System.out.println("You Win!");
             	break;
             }
         }
         
-        //FXML 파일을 로드하는 코드? 검토가 필요함
-        @FXML Pane secPane;
-        public void loadFxml (ActionEvent event) {
-        Pane newLoadedPane;
-    	try {
-    		newLoadedPane = FXMLLoader.load(getClass().getResource("GameImage.fxml"));
-    		secPane.getChildren().add(newLoadedPane); 
-    	} catch (IOException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	}
         
-        }  
+        
+        //FXML 파일을 로드하는 코드? 검토가 필요함
+        
+        
     }
     
     
     // FXML 및 게임 로드 부분
     // stackpane을 사용했지만 둘 다 불러와지지 않고 게임이 덮어씌워지는 문제가 있음.
     public void start(Stage stage) throws Exception {
-            scene = new Scene(createContent());
-            stage.setScene(scene);
-            stage.show();
-      
-    	
-        
+    	FXMLLoader loader = new FXMLLoader();
+        scene = new Scene(createContent());
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
         launch(args);
     }
 }
