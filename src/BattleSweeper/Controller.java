@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    Time time = new Time("0");
+    Time time = new Time("000");
 
 
     @FXML

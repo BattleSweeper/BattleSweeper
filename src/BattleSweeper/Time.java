@@ -4,14 +4,14 @@ public class Time {
     private int second;
 
 
-    public Time(int hour, int minute, int second) {
+    public Time(int second) {
 
         this.second = second;
     }
 
     public Time(String currentTime) 
     {
-        String[] time = currentTime.split(":");
+        String[] time = currentTime.split("");
         second = Integer.parseInt(time[0]);
         
     }
