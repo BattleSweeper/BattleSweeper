@@ -27,8 +27,8 @@ public class BattlesweeperApp extends Application {
 
     private int TILE_SIZE;
     private static final int TILE_MARGIN = 4;
-    private static final int W = 800;
-    private static final int H = 800;
+    private static final int W = 700;
+    private static final int H = 700;
 
     private static final int X_TILES = 16;
     private static final int Y_TILES = 16;
@@ -100,8 +100,8 @@ public class BattlesweeperApp extends Application {
 
     	Pane root1 = new BorderPane();
     	TopBar topBar = new TopBar();
-    	Text timer = new Text(210,40,"0");
-    	Text bombCount_text = new Text(500,40,String.valueOf(totalBomb));
+    	Text timer = new Text(160,32,"0");
+    	Text bombCount_text = new Text(450,32,String.valueOf(totalBomb));
 
         timer.setFont(fontBold);
         bombCount_text.setFont(fontBold);
@@ -184,7 +184,7 @@ public class BattlesweeperApp extends Application {
         
         public TopBar(){
             topBarImage = new ImageView(new Image(getIconPath("TopBar.png")));
-        	topBarImage.setFitWidth(700);
+        	topBarImage.setFitWidth(W - 100);
         	topBarImage.setPreserveRatio(true);
         	topBarImage.setSmooth(true);
         	topBarImage.setCache(true);
