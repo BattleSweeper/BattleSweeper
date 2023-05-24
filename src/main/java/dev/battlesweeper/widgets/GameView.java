@@ -1,7 +1,6 @@
 package dev.battlesweeper.widgets;
 
 import dev.battlesweeper.App;
-import dev.battlesweeper.BoardGenerator;
 import dev.battlesweeper.objects.Position;
 import dev.battlesweeper.utils.FontUtils;
 import javafx.geometry.Pos;
