@@ -16,8 +16,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GridPane pane = new GridPane();
-        //StackPane root;
         try {
             //var sceneRes = Objects.requireNonNull(App.class.getResource("GameImage.fxml"));
             //root = FXMLLoader.load(sceneRes);
