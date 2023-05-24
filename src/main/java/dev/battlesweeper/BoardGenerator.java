@@ -1,5 +1,7 @@
 package dev.battlesweeper;
 
+import dev.battlesweeper.objects.Position;
+
 import java.util.HashSet;
 import java.util.Set;
 

@@ -1,34 +1,32 @@
-package dev.battlesweeper;
+package dev.battlesweeper.widgets;
+
+import dev.battlesweeper.App;
+import dev.battlesweeper.BoardGenerator;
+import dev.battlesweeper.objects.Position;
+import dev.battlesweeper.utils.FontUtils;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.SubScene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import dev.battlesweeper.utils.FontUtils;
-import javafx.application.Application;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.SubScene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+public class GameView extends Pane {
 
-public class BattlesweeperApp extends Application {
-
-    private int TILE_SIZE;
+    private final int TILE_SIZE;
     private static final int TILE_MARGIN = 4;
-    private static final int W = 700;
-    private static final int H = 700;
+    private final int W;
+    private final int H;
+
+    private final Position[] minePositions;
 
     private static final int X_TILES = 16;
     private static final int Y_TILES = 16;
@@ -50,80 +48,71 @@ public class BattlesweeperApp extends Application {
 
     private final Tile[][] grid = new Tile[X_TILES][Y_TILES];
     private final Image[] numberImages = new Image[5];
-    private Scene scene;
 
-    private Font fontRegular;
-    private Font fontBold;
+    private final Font fontRegular;
+    private final Font fontBold;
 
     //승리 조건을 임시로 계산하기 위한 변수
     private int totalBomb = 0;
     private int flagCount = 0;
-    
+
     //이미지 경로
     Image FlaggedImage_path = new Image(getIconPath(TILE_FLAGGED));
 
-    // FXML 및 게임 로드 부분
-    // stackpane을 사용했지만 둘 다 불러와지지 않고 게임이 덮어씌워지는 문제가 있음.
-    public void start(Stage stage) {
+    public GameView(int width, int height, Position[] mines) {
+        super();
+        W = width;
+        H = height;
+        TILE_SIZE = ((W - 40) / 16) - TILE_MARGIN;
 
-        try {
-            TILE_SIZE = ((W - 40) / 16) - TILE_MARGIN;
+        minePositions = mines;
 
-            fontRegular = FontUtils.loadFontFromResource("NanumSquareNeo-bRg.ttf", 20);
-            fontBold    = FontUtils.loadFontFromResource("NanumSquareNeo-cBd.ttf", 20);
+        fontRegular = FontUtils.loadFontFromResource("NanumSquareNeo-bRg.ttf", 20);
+        fontBold    = FontUtils.loadFontFromResource("NanumSquareNeo-cBd.ttf", 20);
 
-            for (var i = 0; i < numberImages.length; ++i) {
-                var path = getIconPath((i + 1) + ".png");
-                numberImages[i] = new Image(path);
-            }
-
-            SubScene subSceneTwo = new SubScene(createContent(), W, H);
-
-            SubScene subSceneOne = new SubScene(createTopBar(), W,100);
-
-            VBox root = new VBox(10);
-            root.setAlignment(Pos.TOP_LEFT);
-            root.getChildren().addAll(subSceneOne, subSceneTwo);
-            Scene mainScene = new Scene(root, W,H + 100);
-            stage.setScene(mainScene);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (var i = 0; i < numberImages.length; ++i) {
+            var path = getIconPath((i + 1) + ".png");
+            numberImages[i] = new Image(path);
         }
+
+        SubScene mineField = new SubScene(createContent(), W, H);
+
+        SubScene topBar = new SubScene(createTopBar(), W,100);
+
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.TOP_LEFT);
+        root.getChildren().addAll(topBar, mineField);
+        this.getChildren().add(root);
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
     private Parent createTopBar() {
 
-    	Pane root1 = new BorderPane();
-    	TopBar topBar = new TopBar();
-    	Text timer = new Text(160,32,"0");
-    	Text bombCount_text = new Text(450,32,String.valueOf(totalBomb));
+        Pane root1 = new BorderPane();
+        TopBar topBar = new TopBar();
+        Text timer = new Text(160,32,"0");
+        Text bombCount_text = new Text(450,32, String.valueOf(totalBomb));
 
         timer.setFont(fontBold);
         bombCount_text.setFont(fontBold);
 
-    	root1.setLayoutX(50);
-    	root1.setLayoutY(30);
-    	root1.getChildren().add(topBar.topBarImage);
-    	root1.getChildren().add(timer);
-    	root1.getChildren().add(bombCount_text);
+        root1.setLayoutX(50);
+        root1.setLayoutY(30);
+        root1.getChildren().add(topBar.topBarImage);
+        root1.getChildren().add(timer);
+        root1.getChildren().add(bombCount_text);
 
-    	return root1;
+        return root1;
     }
 
     private Parent createContent() {
-    	//지뢰 카운트 초기화
-    	GridPane root = new GridPane();
-    	
+        //지뢰 카운트 초기화
+        GridPane root = new GridPane();
+
         root.setPrefSize(W, H);
         //타일 시작 위치
         root.setLayoutX(25);
 
-        var mines = BoardGenerator.generateMines(new Position(16, 16), 40);
+        var mines = minePositions;
 
         for (int y = 0; y < Y_TILES; y++) {
             for (int x = 0; x < X_TILES; x++) {
@@ -177,18 +166,18 @@ public class BattlesweeperApp extends Application {
         }
 
         return neighbors;
-        
     }
+
     private class TopBar extends VBox {
-    	private final ImageView topBarImage;
-        
+        private final ImageView topBarImage;
+
         public TopBar(){
             topBarImage = new ImageView(new Image(getIconPath("TopBar.png")));
-        	topBarImage.setFitWidth(W - 100);
-        	topBarImage.setPreserveRatio(true);
-        	topBarImage.setSmooth(true);
-        	topBarImage.setCache(true);
-        	topBarImage.setVisible(true);
+            topBarImage.setFitWidth(W - 100);
+            topBarImage.setPreserveRatio(true);
+            topBarImage.setSmooth(true);
+            topBarImage.setCache(true);
+            topBarImage.setVisible(true);
         }
     }
 
@@ -246,14 +235,14 @@ public class BattlesweeperApp extends Application {
             var totalTileSize = (TILE_SIZE + TILE_MARGIN);
             setTranslateX(x * totalTileSize);
             setTranslateY(y * totalTileSize);
-            
+
             //이벤트 처리부분
             setOnMouseClicked(e-> {
                 if (e.getButton() == MouseButton.PRIMARY) {
                     open();
                 }
-                if (e.getButton() == MouseButton.SECONDARY) { 
-                	flag();
+                if (e.getButton() == MouseButton.SECONDARY) {
+                    flag();
                 }
             });
         }
@@ -264,16 +253,16 @@ public class BattlesweeperApp extends Application {
 
             overlayImage.setVisible(false);
             if (hasBomb()) {
-               System.out.println("Game Over");
-               //scene.setRoot(createContent());
-               return;
+                System.out.println("Game Over");
+                //scene.setRoot(createContent());
+                return;
             }
             state = STATE_OPEN;
 
             if (this.bombCount == COUNT_EMPTY)
                 getNeighbors(this).forEach(Tile::open);
         }
-        
+
         public void flag() {
             if (isOpen())
                 return;
@@ -311,6 +300,6 @@ public class BattlesweeperApp extends Application {
     }
 
     private String getIconPath(String res) {
-        return Objects.requireNonNull(getClass().getResource(RES_PATH + res)).toExternalForm();
+        return Objects.requireNonNull(App.class.getResource(RES_PATH + res)).toExternalForm();
     }
 }
