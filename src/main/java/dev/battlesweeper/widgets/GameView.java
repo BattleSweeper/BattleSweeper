@@ -219,7 +219,7 @@ public class GameView extends Pane {
             getChildren().add(baseImage);
             if (numberImage != null) {
                 setImageViewAttrs(numberImage);
-                numberImage.setFitWidth(TILE_SIZE - 15);
+                numberImage.setFitWidth(TILE_SIZE - ((double) W / 47));
                 getChildren().add(numberImage);
             }
 
