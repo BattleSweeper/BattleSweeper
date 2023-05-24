@@ -1,8 +1,8 @@
-package dev.battlesweeper;
+package dev.battlesweeper.objects;
 
 public record Position(int x, int y) {
 
-    boolean isNearby(Position other, int radius) {
+    public boolean isNearby(Position other, int radius) {
         return Math.abs(other.x - x) <= radius && Math.abs(other.y - y) <= radius;
     }
 
