@@ -56,7 +56,8 @@ public class GameView extends Pane {
     private int flagCount = 0;
 
     //이미지 경로
-    Image FlaggedImage_path = new Image(getIconPath(TILE_FLAGGED));
+    Image imageFlagged = new Image(getIconPath(TILE_FLAGGED));
+    Image imageEmpty   = new Image(getIconPath(TILE_EMPTY));
 
     public GameView(int width, int height, Position[] mines) {
         super();
@@ -266,11 +267,20 @@ public class GameView extends Pane {
             if (isOpen())
                 return;
 
+            if (isFlagged()) {
+                if (hasBomb())
+                    flagCount--;
+
+                state = STATE_DEFAULT;
+                overlayImage.setImage(imageEmpty);
+                return;
+            }
+
             if (hasBomb()) {
                 flagCount++;
             }
-
-            overlayImage.setImage(FlaggedImage_path);
+            state = STATE_FLAGGED;
+            overlayImage.setImage(imageFlagged);
 
             if (flagCount >= totalBomb) {
                 System.out.println("You Win!");
