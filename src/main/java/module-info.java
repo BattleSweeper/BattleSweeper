@@ -1,6 +1,8 @@
 module dev.battlesweeper {
     requires javafx.controls;
     requires javafx.fxml;
+    requires io.reactivex.rxjava3;
+    requires org.slf4j;
     requires static lombok;
 
 
