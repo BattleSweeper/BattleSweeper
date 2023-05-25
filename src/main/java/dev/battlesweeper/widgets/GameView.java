@@ -1,6 +1,9 @@
 package dev.battlesweeper.widgets;
 
 import dev.battlesweeper.App;
+import dev.battlesweeper.event.Event;
+import dev.battlesweeper.event.EventHandler;
+import dev.battlesweeper.event.MutableEventHandler;
 import dev.battlesweeper.objects.Position;
 import dev.battlesweeper.utils.FontUtils;
 import javafx.geometry.Pos;
@@ -12,11 +15,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameView extends Pane {
 
@@ -45,6 +49,8 @@ public class GameView extends Pane {
     private static final int STATE_OPEN    = 1;
     private static final int STATE_FLAGGED = 2;
 
+    private final MutableEventHandler eventHandler = new MutableEventHandler();
+
     private final Tile[][] grid = new Tile[X_TILES][Y_TILES];
     private final Image[] numberImages = new Image[5];
 
@@ -54,6 +60,7 @@ public class GameView extends Pane {
     //승리 조건을 임시로 계산하기 위한 변수
     private int totalBomb = 0;
     private int flagCount = 0;
+    private long startTimeMillis;
 
     //이미지 경로
     Image imageFlagged = new Image(getIconPath(TILE_FLAGGED));
@@ -83,6 +90,12 @@ public class GameView extends Pane {
         root.setAlignment(Pos.TOP_LEFT);
         root.getChildren().addAll(topBar, mineField);
         this.getChildren().add(root);
+
+        startTimeMillis = System.currentTimeMillis();
+    }
+
+    public EventHandler getEventHandler() {
+        return eventHandler;
     }
 
     private Parent createTopBar() {
@@ -166,6 +179,14 @@ public class GameView extends Pane {
         }
 
         return neighbors;
+    }
+
+    private String getIconPath(String res) {
+        return Objects.requireNonNull(App.class.getResource(RES_PATH + res)).toExternalForm();
+    }
+
+    private long getElapsedTime() {
+        return System.currentTimeMillis() - startTimeMillis;
     }
 
     private class TopBar extends VBox {
@@ -253,11 +274,17 @@ public class GameView extends Pane {
 
             overlayImage.setVisible(false);
             if (hasBomb()) {
+                var event = GameOverEvent.builder()
+                        .flagCount(flagCount)
+                        .time(getElapsedTime())
+                        .build();
+                eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
                 return;
             }
             state = STATE_OPEN;
+            notifyUpdate(TileUpdateEvent.ACTION_TILE_OPEN);
 
             if (this.bombCount == COUNT_EMPTY)
                 getNeighbors(this).forEach(Tile::open);
@@ -273,6 +300,7 @@ public class GameView extends Pane {
 
                 state = STATE_DEFAULT;
                 overlayImage.setImage(imageEmpty);
+                notifyUpdate(TileUpdateEvent.ACTION_FLAG_REMOVE);
                 return;
             }
 
@@ -281,10 +309,22 @@ public class GameView extends Pane {
             }
             state = STATE_FLAGGED;
             overlayImage.setImage(imageFlagged);
+            notifyUpdate(TileUpdateEvent.ACTION_FLAG_PLACE);
 
             if (flagCount >= totalBomb) {
+                var event = new GameWinEvent(getElapsedTime());
+                eventHandler.fireEvent(event);
                 System.out.println("You Win!");
             }
+        }
+
+        private void notifyUpdate(int action) {
+            var event = TileUpdateEvent.builder()
+                    .action(action)
+                    .position(new Position(x, y))
+                    .bombLeft(totalBomb - flagCount)
+                    .build();
+            eventHandler.fireEvent(event);
         }
 
         public boolean isOpen() {
@@ -305,10 +345,32 @@ public class GameView extends Pane {
             image.setSmooth(true);
             image.setCache(true);
         }
-        //FXML 파일을 로드하는 코드? 검토가 필요함
     }
 
-    private String getIconPath(String res) {
-        return Objects.requireNonNull(App.class.getResource(RES_PATH + res)).toExternalForm();
+    /* --- Events --- */
+
+    @Getter @Builder @ToString
+    static class TileUpdateEvent implements Event {
+
+        private Position position;
+        private int action;
+        private long bombLeft;
+
+        public static final int ACTION_TILE_OPEN   = 0;
+        public static final int ACTION_FLAG_PLACE  = 1;
+        public static final int ACTION_FLAG_REMOVE = 2;
+    }
+
+    @Getter @Builder @ToString
+    static class GameOverEvent implements Event {
+
+        private int flagCount;
+        private long time;
+    }
+
+    @Getter @AllArgsConstructor @ToString
+    static class GameWinEvent implements Event {
+
+        private long time;
     }
 }
