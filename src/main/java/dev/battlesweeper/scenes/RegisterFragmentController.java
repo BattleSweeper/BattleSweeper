@@ -1,5 +1,6 @@
 package dev.battlesweeper.scenes;
 
+import dev.battlesweeper.Env;
 import dev.battlesweeper.network.RESTRequestHandler;
 import dev.battlesweeper.network.body.AuthRequest;
 import dev.battlesweeper.utils.ResourceUtils;
@@ -51,7 +52,7 @@ public class RegisterFragmentController implements Initializable, FragmentUpdate
                     .build();
 
             try {
-                var response = new RESTRequestHandler("http://localhost:8881/bs/api/v1/auth");
+                var response = new RESTRequestHandler(Env.SERVER_HOST_URL + "/auth");
                 //        .post(body, TokenResponse.class);
             } catch (Exception e) {
                 e.printStackTrace();

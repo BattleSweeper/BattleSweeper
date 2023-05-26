@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.battlesweeper.network.body.ResultPacket;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -27,7 +25,7 @@ public class RESTRequestHandler {
         this.mapper = new ObjectMapper();
     }
 
-    public <T> Optional<T> post(String body, Class<T> tClass) {
+    public Optional<ResultPacket> post(String body) {
         var request = HttpRequest
                 .newBuilder(targetUri)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
@@ -35,12 +33,10 @@ public class RESTRequestHandler {
                 .build();
         var result = getClient().sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
-                .thenApply(this::unwrapResultPacket)
                 .thenApply(str -> {
                     try {
-                        return mapper.readValue(str, tClass);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        return mapper.readValue(str, ResultPacket.class);
+                    } catch (JsonProcessingException e) {
                         return null;
                     }
                 })
@@ -48,14 +44,41 @@ public class RESTRequestHandler {
         return Optional.ofNullable(result);
     }
 
-    public <T> Optional<T> post(Map<String, String> params, Class<T> tClass) throws JsonProcessingException {
+    public Optional<ResultPacket> post(Map<String, String> params) throws JsonProcessingException {
         var body = mapper.writeValueAsString(params);
-        return post(body, tClass);
+        return post(body);
     }
 
-    public <V, T> Optional<T> post(V params, Class<T> tClass) throws JsonProcessingException {
+    public <V> Optional<ResultPacket> post(V params) throws JsonProcessingException {
         var body = mapper.writeValueAsString(params);
-        return post(body, tClass);
+        return post(body);
+    }
+
+    public <T> Optional<T> postMessage(String body, Class<T> tClass) {
+        var result = post(body);
+        if (result.isEmpty())
+            return Optional.empty();
+
+        if (result.get().result != ResultPacket.RESULT_OK)
+            return Optional.empty();
+
+        T value;
+        try {
+            value = mapper.readValue(result.get().message, tClass);
+        } catch (JsonProcessingException e) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(value);
+    }
+
+    public <T> Optional<T> postMessage(Map<String, String> params, Class<T> tClass) throws JsonProcessingException {
+        var body = mapper.writeValueAsString(params);
+        return postMessage(body, tClass);
+    }
+
+    public <V, T> Optional<T> postMessage(V params, Class<T> tClass) throws JsonProcessingException {
+        var body = mapper.writeValueAsString(params);
+        return postMessage(body, tClass);
     }
 
     private HttpClient getClient() {

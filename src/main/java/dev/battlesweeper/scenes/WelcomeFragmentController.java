@@ -38,8 +38,7 @@ public class WelcomeFragmentController implements Initializable, FragmentUpdater
                 });
 
         buttonLogin.setOnAction(event -> {
-            new NotificationBubble().title("Test").message("FOOBAR").showPrimary();
-            //setFragment(ResourceUtils.getResource("WelcomeFragment.fxml"));
+            setFragment(ResourceUtils.getResource("LoginFragment.fxml"));
         });
 
         buttonRegister.setOnAction(event -> {

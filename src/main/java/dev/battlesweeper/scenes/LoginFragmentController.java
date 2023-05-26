@@ -1,5 +1,6 @@
 package dev.battlesweeper.scenes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.battlesweeper.Env;
 import dev.battlesweeper.Session;
 import dev.battlesweeper.network.RESTRequestHandler;
@@ -10,24 +11,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 @Slf4j
-public class AnonLoginFragmentController implements Initializable, FragmentUpdater {
+public class LoginFragmentController implements Initializable, FragmentUpdater {
 
-    private static final char[] alphanumericPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray();
-
-    @FXML private TextField inputUsername;
-    @FXML private Button buttonPrev;
-    @FXML private Button buttonSubmit;
+    @FXML private TextField     inputEmail;
+    @FXML private PasswordField inputPassword;
+    @FXML private Button        buttonSubmit;
+    @FXML private Button        buttonPrev;
 
     private HomeController parentController;
+    private ObjectMapper mapper;
 
     @Override
     public void setParent(Initializable parent) {
@@ -36,32 +37,59 @@ public class AnonLoginFragmentController implements Initializable, FragmentUpdat
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        mapper = new ObjectMapper();
+
         buttonPrev.setOnAction(event -> {
-            openFragment("WelcomeFragment");
+            try {
+                parentController.setFragment(ResourceUtils.getResource("WelcomeFragment.fxml"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         buttonSubmit.setOnAction(event -> {
-            if (!checkInputSanity(inputUsername))
+            if (!checkInputSanity(inputEmail, inputPassword))
                 return;
 
-            var username = inputUsername.getText() + "#" + randomTag();
-            log.info("name= " + username);
-
             var body = AuthRequest.builder()
-                    .type(AuthRequest.TYPE_ANONYMOUS)
+                    .type(AuthRequest.TYPE_REGISTERED)
                     .info(AuthRequest.AuthInfo.builder()
-                            .username(username)
+                            .email(inputEmail.getText())
+                            .password(inputPassword.getText())
                             .build())
                     .build();
 
             try {
                 var response = new RESTRequestHandler(Env.SERVER_HOST_URL + "/auth")
-                        .postMessage(body, TokenInfo.class);
+                        .post(body);
 
                 if (response.isPresent()) {
+                    var resPacket = response.get();
+                    String alertMessage = null;
+                    switch (resPacket.result) {
+                        case 404 -> {
+                            alertMessage = "유저가 존재하지 않습니다.";
+                        }
+                        case 400 -> {
+                            if (resPacket.message.equals("PASSWORD_MISMATCH"))
+                                alertMessage = "비밀번호가 일치하지 않습니다.";
+                            else
+                                alertMessage = "잘못된 데이터 송신";
+                        }
+                    }
+                    if (alertMessage != null) {
+                        var alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText(alertMessage);
+                        alert.show();
+                        return;
+                    }
+
+                    TokenInfo tokenInfo = mapper.readValue(resPacket.message, TokenInfo.class);
                     var session = Session.getInstance();
-                    session.tokenInfo = response.get();
-                    session.userName  = username;
+                    session.tokenInfo = tokenInfo;
+                    // TODO: Get username from server
+                    //session.userName  = username;
+                    session.userName  = "더미";
                     log.info("auth success");
 
                     openFragment("PlayFragment");
@@ -87,15 +115,7 @@ public class AnonLoginFragmentController implements Initializable, FragmentUpdat
         }
     }
 
-    private String randomTag() {
-        var rand = new Random();
-        final var buffer = new StringBuilder();
-        for (var i = 0; i < 4; ++i)
-            buffer.append(alphanumericPool[rand.nextInt(alphanumericPool.length)]);
-        return buffer.toString();
-    }
-
-    private boolean checkInputSanity(TextField ...fields) {
+    private boolean checkInputSanity(TextField...fields) {
         boolean result = true;
         for (var field : fields) {
             if (field.getText().isBlank()) {
