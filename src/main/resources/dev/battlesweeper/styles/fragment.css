@@ -1,0 +1,46 @@
+.label {
+    -fx-font-family: "NanumSquare Neo Bold";
+    -fx-font-size: 16;
+    -fx-text-fill: #ffffff;
+}
+
+.title {
+    -fx-font-size: 24;
+}
+
+.text-field {
+    -fx-font-family: "NanumSquare Neo Bold";
+    -fx-font-size: 16;
+    -fx-padding: 6;
+}
+
+.bold {
+    -fx-font-weight: bolder;
+}
+
+.button-full {
+    -fx-min-width: 320;
+    -fx-pref-width: 320;
+    -fx-max-width: 320;
+}
+
+.button-half {
+    -fx-min-width: 150;
+    -fx-pref-width: 150;
+    -fx-max-width: 150;
+}
+
+.label-welcome {
+    -fx-font-family: "NanumSquare Neo Bold";
+    -fx-font-size: 24;
+    -fx-text-fill: #ffffff;
+}
+
+.error {
+    -fx-border-width: 1.5;
+    -fx-border-color: #FF3B3B;
+}
+
+#welcomeSub {
+    -fx-font-size: 14;
+}

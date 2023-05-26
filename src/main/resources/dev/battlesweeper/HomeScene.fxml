@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<AnchorPane fx:id="container" prefHeight="800.0" prefWidth="1200.0" stylesheets="@styles/home.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.HomeController">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="500.0" layoutX="350.0" layoutY="205.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/home-title.png" />
+         </image>
+      </ImageView>
+      <BorderPane fx:id="interactionContainer" layoutX="400.0" layoutY="318.0" prefHeight="380.0" prefWidth="400.0" />
+   </children>
+</AnchorPane>

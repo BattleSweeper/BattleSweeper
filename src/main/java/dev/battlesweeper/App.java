@@ -1,14 +1,14 @@
 package dev.battlesweeper;
 
-import dev.battlesweeper.event.Event;
-import dev.battlesweeper.objects.Position;
-import dev.battlesweeper.widgets.GameView;
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Objects;
 
 @Slf4j
 public class App extends Application {
@@ -22,8 +22,11 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            //var sceneRes = Objects.requireNonNull(App.class.getResource("GameImage.fxml"));
-            //root = FXMLLoader.load(sceneRes);
+            Session.getInstance().rootStage = stage;
+
+            var sceneRes = Objects.requireNonNull(App.class.getResource("SplashScene.fxml"));
+            AnchorPane root = FXMLLoader.load(sceneRes);
+            /*
             VBox root = new VBox();
             var mines = BoardGenerator.generateMines(new Position(16, 16), 5);
             var gameView = new GameView(700, 700, mines);
@@ -34,10 +37,12 @@ public class App extends Application {
                     });
 
             root.getChildren().add(gameView);
+             */
 
-            Scene scene = new Scene(root,800,800);
+            Scene scene = new Scene(root,1200,800);
             stage.setScene(scene);
             stage.setResizable(false);
+            stage.setTitle("BattleSweeper Application");
             stage.show();
             stage.setOnCloseRequest(event -> {
                 if (eventListener != null)

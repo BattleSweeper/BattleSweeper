@@ -1,0 +1,29 @@
+.vbox {
+    -fx-background-color: gray;
+    -fx-padding: 10;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}
+
+.label {
+    -fx-font-family: "NanumSquare Neo Bold";
+    -fx-font-size: 12;
+    -fx-text-fill: #ffffff;
+}
+
+.title {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+}
+
+.primary {
+    -fx-background-color: #AD977A;
+}
+
+.warn {
+    -fx-background-color: #f5a33c;
+}
+
+.error {
+    -fx-background-color: #FF3B3B;
+}

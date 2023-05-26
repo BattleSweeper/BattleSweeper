@@ -31,7 +31,7 @@
                      <children>
                         <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="-3.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true" x="70.0">
                            <image>
-                              <Image url="@icon/smile.png" />
+                              <Image url="@images/smile.png" />
                            </image>
                         </ImageView>
                      </children>

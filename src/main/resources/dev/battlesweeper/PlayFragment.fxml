@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="playContainer" prefHeight="380.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.PlayFragmentController">
+    <children>
+      <VBox alignment="TOP_CENTER" layoutX="40.0" layoutY="22.0" spacing="10.0">
+         <children>
+            <VBox alignment="CENTER" spacing="4.0" styleClass="button-full">
+               <children>
+                  <Label fx:id="labelWelcomeText" styleClass="title" text="🚩환영해요, NAME!" />
+                  <Label id="welcomeSub" fx:id="labelWelcomeText1" styleClass="title" text="오늘은 어떤 게임을 해볼까요?" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </VBox>
+              <Button fx:id="buttonSolo" mnemonicParsing="false">
+                  <styleClass>
+                      <String fx:value="button-full" />
+                      <String fx:value="container" />
+                  </styleClass>
+                  <graphic>
+                      <HBox>
+                          <children>
+                              <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                  <image>
+                                      <Image url="@images/home-button-solo.png" />
+                                  </image>
+                              </ImageView>
+                          </children>
+                      </HBox>
+                  </graphic>
+              </Button>
+            <Button fx:id="buttonDuo" mnemonicParsing="false">
+               <styleClass>
+                  <String fx:value="button-full" />
+                  <String fx:value="container" />
+               </styleClass>
+               <graphic>
+                  <HBox>
+                     <children>
+                        <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/home-button-duo.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </graphic>
+            </Button>
+            <Button fx:id="buttonBattle" mnemonicParsing="false">
+               <styleClass>
+                  <String fx:value="button-full" />
+                  <String fx:value="container" />
+               </styleClass>
+               <graphic>
+                  <HBox>
+                     <children>
+                        <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/home-button-battle.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </graphic>
+            </Button>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="18.0">
+               <children>
+                  <Button mnemonicParsing="false" text="로그아웃">
+                     <styleClass>
+                        <String fx:value="button-half" />
+                        <String fx:value="container" />
+                     </styleClass>
+                  </Button>
+                  <Button mnemonicParsing="false" text="모시깽이">
+                     <styleClass>
+                        <String fx:value="button-half" />
+                        <String fx:value="container" />
+                     </styleClass>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+    </children>
+   <stylesheets>
+      <URL value="@styles/fragment.css" />
+      <URL value="@styles/container.css" />
+   </stylesheets>
+</AnchorPane>

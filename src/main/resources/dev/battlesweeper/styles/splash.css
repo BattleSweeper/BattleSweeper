@@ -1,0 +1,16 @@
+.root {
+    -fx-background-color: #ffffff;
+}
+
+.label {
+    -fx-font-family: "NanumSquareRound ExtraBold";
+    -fx-font-size: 36;
+}
+
+.label > .title {
+    -fx-font-family: "NanumSquareRound ExtraBold";
+}
+
+#logo {
+    -fx-background-color: #ffffff;
+}

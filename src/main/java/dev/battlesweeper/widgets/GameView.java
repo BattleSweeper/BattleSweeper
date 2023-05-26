@@ -1,11 +1,11 @@
 package dev.battlesweeper.widgets;
 
-import dev.battlesweeper.App;
 import dev.battlesweeper.event.Event;
 import dev.battlesweeper.event.EventHandler;
 import dev.battlesweeper.event.MutableEventHandler;
 import dev.battlesweeper.objects.Position;
 import dev.battlesweeper.utils.FontUtils;
+import dev.battlesweeper.utils.ResourceUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
@@ -33,8 +33,6 @@ public class GameView extends Pane {
 
     private static final int X_TILES = 16;
     private static final int Y_TILES = 16;
-
-    private static final String RES_PATH = "icon/";
 
     private static final String TILE_MINE       = "tile_mine.png";
     private static final String TILE_EMPTY      = "tile_empty.png";
@@ -182,7 +180,7 @@ public class GameView extends Pane {
     }
 
     private String getIconPath(String res) {
-        return Objects.requireNonNull(App.class.getResource(RES_PATH + res)).toExternalForm();
+        return ResourceUtils.getIconPath(res);
     }
 
     private long getElapsedTime() {

@@ -1,0 +1,14 @@
+.container {
+    -fx-background-color: #CBCBCB99;
+    -fx-background-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-color: #C0C0C0;
+    -fx-border-radius: 10;
+    -fx-min-height: 50;
+    -fx-font-family: "NanumSquare Neo Bold";
+    -fx-font-size: 18;
+}
+
+.container:hover {
+    -fx-background-color: #CFCFCF;
+}

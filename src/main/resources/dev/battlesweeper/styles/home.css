@@ -1,0 +1,10 @@
+.root {
+    -fx-background-color: #ffffff;
+}
+
+#container {
+    -fx-background-image: url("../images/background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+    -fx-background-size: cover;
+}
