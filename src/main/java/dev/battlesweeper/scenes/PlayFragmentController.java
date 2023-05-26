@@ -58,7 +58,8 @@ public class PlayFragmentController implements Initializable, FragmentUpdater {
         });
 
         buttonDuo.setOnAction(event -> {
-            openMatchmakingScene();
+            //openMatchmakingScene();
+            parentController.showMatchDialog();
         });
     }
 

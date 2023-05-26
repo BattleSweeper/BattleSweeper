@@ -1,34 +1,114 @@
 package dev.battlesweeper.scenes;
 
 import dev.battlesweeper.utils.ResourceUtils;
-import dev.battlesweeper.widgets.NotificationBubble;
 import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
+@Slf4j
 public class HomeController implements Initializable {
 
+    private static final long MINUTE = 1000 * 60;
+
     @FXML protected AnchorPane container;
-    @FXML private BorderPane interactionContainer;
+    @FXML private BorderPane   interactionContainer;
+    @FXML private Pane         matchmakingDialog;
+    @FXML private Button       buttonCancelMatch;
+    @FXML private Label        labelElapsedTime;
+
+    private long matchStartMillis;
+    private Timer timeCountTimer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        var blur = new GaussianBlur();
-        blur.setRadius(6);
         try {
+            buttonCancelMatch.setOnAction(event -> {
+                hideMatchDialog();
+            });
+
             var loader = setFragment(ResourceUtils.getResource("WelcomeFragment.fxml"), 600);
             ((WelcomeFragmentController) loader.getController()).setParent(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    void showMatchDialog() {
+        setupTimeCountTimer();
+        var transition = new TranslateTransition(Duration.millis(700));
+        transition.setInterpolator(new Interpolator() {
+            @Override
+            protected double curve(double t) {
+                return (t == 1.0) ? 1.0 : 1 - Math.pow(2.0, -10 * t);
+            }
+        });
+        transition.setNode(matchmakingDialog);
+        transition.setFromY(matchmakingDialog.getHeight());
+        transition.setToY(0);
+
+        matchmakingDialog.setVisible(true);
+        transition.play();
+    }
+
+    void hideMatchDialog() {
+        var transition = new TranslateTransition(Duration.millis(800));
+        transition.setInterpolator(new Interpolator() {
+            @Override
+            protected double curve(double t) {
+                return (t == 1.0) ? 1.0 : 1 - Math.pow(2.0, -10 * t);
+            }
+        });
+        transition.setNode(matchmakingDialog);
+        transition.setToY(matchmakingDialog.getTranslateY() + matchmakingDialog.getHeight());
+        transition.setFromY(matchmakingDialog.getTranslateY());
+        transition.setOnFinished(event -> {
+            matchmakingDialog.setVisible(false);
+            cancelTimeCountTimer();
+        });
+
+        transition.play();
+    }
+
+    private void setupTimeCountTimer() {
+        cancelTimeCountTimer();
+
+        matchStartMillis = System.currentTimeMillis();
+        timeCountTimer = new Timer();
+        timeCountTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                var elapsedTime = System.currentTimeMillis() - matchStartMillis;
+                Platform.runLater(() ->
+                        labelElapsedTime.setText(
+                                (elapsedTime / MINUTE) + "분 " + ((elapsedTime % MINUTE) / 1000) + "초 대기중...")
+                );
+            }
+        }, 0, 1000);
+    }
+
+    private void cancelTimeCountTimer() {
+        if (timeCountTimer != null) {
+            timeCountTimer.cancel();
+            timeCountTimer = null;
         }
     }
 

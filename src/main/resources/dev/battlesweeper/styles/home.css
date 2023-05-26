@@ -8,3 +8,32 @@
     -fx-background-position: center center;
     -fx-background-size: cover;
 }
+
+#matchmakingDialog > .label {
+    -fx-text-fill: black;
+    -fx-font-size: 20;
+}
+
+#elapsedTime {
+    -fx-font-family: "NanumSquare Neo Bold";
+    -fx-text-fill: black;
+    -fx-font-size: 16;
+}
+
+#matchmakingDialog > .button {
+    -fx-background-color: #AD977A;
+    -fx-background-radius: 10;
+    -fx-border-width: 0;
+    -fx-border-radius: 10;
+    -fx-min-height: 50;
+    -fx-font-family: "NanumSquare Neo Bold";
+    -fx-text-fill: white;
+    -fx-font-size: 18;
+}
+
+#matchmakingDialog {
+    -fx-background-color: white;
+    -fx-background-radius: 20 20 0 0;
+    -fx-border-width: 0;
+    -fx-border-radius: 20 20 0 0;
+}

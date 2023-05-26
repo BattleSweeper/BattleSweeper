@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="container" prefHeight="800.0" prefWidth="1200.0" stylesheets="@styles/home.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.HomeController">
    <children>
@@ -14,5 +17,21 @@
          </image>
       </ImageView>
       <BorderPane fx:id="interactionContainer" layoutX="400.0" layoutY="318.0" prefHeight="380.0" prefWidth="400.0" />
+      <Pane fx:id="matchmakingDialog" layoutX="325.0" layoutY="300.0" prefHeight="500.0" prefWidth="550.0" stylesheets="@styles/fragment.css" visible="false">
+         <children>
+            <Label layoutX="215.0" layoutY="139.0" text="유저 찾는 중.." />
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="200.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/loading-flag.gif" />
+               </image>
+            </ImageView>
+            <VBox alignment="CENTER" layoutX="152.0" layoutY="344.0" prefHeight="56.0" prefWidth="246.0">
+               <children>
+                  <Label id="elapsedTime" fx:id="labelElapsedTime" text="1분 50초 대기중..." />
+               </children>
+            </VBox>
+            <Button fx:id="buttonCancelMatch" layoutX="39.0" layoutY="423.0" maxWidth="473.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="473.0" text="취소" />
+         </children>
+      </Pane>
    </children>
 </AnchorPane>
