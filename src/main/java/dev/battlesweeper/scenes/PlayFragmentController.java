@@ -126,7 +126,7 @@ public class PlayFragmentController implements Initializable, FragmentUpdater {
         });
 
         buttonExit.setOnAction(event -> {
-
+            System.exit(0);
         });
     }
 
