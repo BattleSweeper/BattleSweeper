@@ -6,6 +6,9 @@ import dev.battlesweeper.event.MutableEventHandler;
 import dev.battlesweeper.objects.Position;
 import dev.battlesweeper.utils.FontUtils;
 import dev.battlesweeper.utils.ResourceUtils;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
@@ -15,6 +18,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,7 +42,7 @@ public class GameView extends Pane {
     private static final String TILE_EMPTY      = "tile_empty.png";
     private static final String TILE_FLAGGED    = "tile_flagged.png";
     private static final String TILE_UNKNOWN    = "tile_unknown.png";
-    private static final String TILE_REVEALED   = "tile_revealed.png";
+    private static final String TILE_UNREVEALED   = "tile_unrevealed.png";
 
     private static final int COUNT_BOMB  = -1;
     private static final int COUNT_EMPTY = 0;
@@ -60,9 +64,13 @@ public class GameView extends Pane {
     private int flagCount = 0;
     private long startTimeMillis;
 
+    private int timerValue;
+
+    Text bombCount_text;
+
     //이미지 경로
     Image imageFlagged = new Image(getIconPath(TILE_FLAGGED));
-    Image imageEmpty   = new Image(getIconPath(TILE_EMPTY));
+    Image imageUnrevealed   = new Image(getIconPath(TILE_UNREVEALED));
 
     public GameView(int width, int height, Position[] mines) {
         super();
@@ -101,7 +109,7 @@ public class GameView extends Pane {
         Pane root1 = new BorderPane();
         TopBar topBar = new TopBar();
         Text timer = new Text(160,32,"0");
-        Text bombCount_text = new Text(450,32, String.valueOf(totalBomb));
+        bombCount_text = new Text(450,32, String.valueOf(totalBomb));
 
         timer.setFont(fontBold);
         bombCount_text.setFont(fontBold);
@@ -111,6 +119,27 @@ public class GameView extends Pane {
         root1.getChildren().add(topBar.topBarImage);
         root1.getChildren().add(timer);
         root1.getChildren().add(bombCount_text);
+
+
+        setOnMouseClicked(e-> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                bombCount_text.setText(String.valueOf(totalBomb-flagCount));
+            }
+        });
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(1), event -> {
+                    timerValue++;
+                    if (timerValue <= 999) {
+                        timer.setText(Integer.toString(timerValue));
+                    } else {
+                        //timeline.stop();
+                    }
+                })
+        );
+        timeline.setCycleCount(Animation.INDEFINITE); // 무한 반복 설정
+        timeline.play();
+
 
         return root1;
     }
@@ -226,14 +255,14 @@ public class GameView extends Pane {
                     baseImage = new ImageView(getIconPath(TILE_MINE));
                 }
                 case COUNT_EMPTY -> { // 주변에 지뢰 없음
-                    baseImage = new ImageView(getIconPath(TILE_REVEALED));
+                    baseImage = new ImageView(getIconPath(TILE_EMPTY));
                 }
                 default -> { // 주변에는 있음
                     baseImage = new ImageView(getIconPath(TILE_EMPTY));
                     numberImage = new ImageView(numberImages[count - 1]);
                 }
             }
-            overlayImage = new ImageView(getIconPath(TILE_EMPTY));
+            overlayImage = new ImageView(getIconPath(TILE_UNREVEALED));
 
             setImageViewAttrs(baseImage);
             getChildren().add(baseImage);
@@ -276,6 +305,7 @@ public class GameView extends Pane {
                         .flagCount(flagCount)
                         .time(getElapsedTime())
                         .build();
+                bombCount_text.setText(String.valueOf(totalBomb));
                 eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
@@ -297,7 +327,7 @@ public class GameView extends Pane {
                     flagCount--;
 
                 state = STATE_DEFAULT;
-                overlayImage.setImage(imageEmpty);
+                overlayImage.setImage(imageUnrevealed);
                 notifyUpdate(TileUpdateEvent.ACTION_FLAG_REMOVE);
                 return;
             }

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="playContainer" prefHeight="380.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.PlayFragmentController">
+<AnchorPane fx:id="playContainer" prefHeight="380.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.PlayFragmentController">
     <children>
       <VBox alignment="TOP_CENTER" layoutX="40.0" layoutY="22.0" spacing="10.0">
          <children>
@@ -77,17 +77,39 @@
             </Button>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="18.0">
                <children>
-                  <Button mnemonicParsing="false" text="로그아웃">
+                  <Button fx:id="buttonSettings" mnemonicParsing="false">
                      <styleClass>
                         <String fx:value="button-half" />
                         <String fx:value="container" />
                      </styleClass>
+                     <graphic>
+                        <HBox prefHeight="42.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/home-button-settings.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" text="모시깽이">
+                  <Button fx:id="buttonExit" mnemonicParsing="false">
                      <styleClass>
                         <String fx:value="button-half" />
                         <String fx:value="container" />
                      </styleClass>
+                     <graphic>
+                        <HBox prefHeight="42.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/home-button-exit.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </graphic>
                   </Button>
                </children>
             </HBox>

@@ -30,6 +30,8 @@ public class PlayFragmentController implements Initializable, FragmentUpdater {
     @FXML private Button buttonSolo;
     @FXML private Button buttonDuo;
     @FXML private Button buttonBattle;
+    @FXML private Button buttonSettings;
+    @FXML private Button buttonExit;
 
     private HomeController parentController;
 
@@ -60,6 +62,16 @@ public class PlayFragmentController implements Initializable, FragmentUpdater {
         buttonDuo.setOnAction(event -> {
             //openMatchmakingScene();
             parentController.showMatchDialog();
+        });
+
+        buttonBattle.setOnAction(event -> {
+        });
+
+        buttonSettings.setOnAction(event -> {
+
+        });
+
+        buttonExit.setOnAction(event -> {
         });
     }
 
