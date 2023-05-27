@@ -1,5 +1,6 @@
 package dev.battlesweeper;
 
+import dev.battlesweeper.network.WebsocketTest;
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,7 @@ public class App extends Application {
             Session.getInstance().rootStage = stage;
 
             var sceneRes = Objects.requireNonNull(App.class.getResource("SplashScene.fxml"));
+            //var sceneRes = Objects.requireNonNull(App.class.getResource("MultiSweeperScene.fxml"));
             AnchorPane root = FXMLLoader.load(sceneRes);
             /*
             VBox root = new VBox();

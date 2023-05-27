@@ -2,7 +2,8 @@ package dev.battlesweeper.network;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.battlesweeper.network.body.ResultPacket;
+import dev.battlesweeper.objects.json.PacketHandlerModule;
+import dev.battlesweeper.objects.packet.ResultPacket;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
@@ -23,6 +24,7 @@ public class RESTRequestHandler {
     public RESTRequestHandler(String url) throws URISyntaxException {
         this.targetUri = new URI(url);
         this.mapper = new ObjectMapper();
+        this.mapper.registerModule(new PacketHandlerModule());
     }
 
     public Optional<ResultPacket> post(String body) {

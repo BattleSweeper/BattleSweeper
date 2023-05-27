@@ -1,3 +1,7 @@
+@font-face {
+    src: url('../fonts/NanumSquareNeo-cBd.ttf');
+}
+
 .container {
     -fx-background-color: #CBCBCB99;
     -fx-background-radius: 10;

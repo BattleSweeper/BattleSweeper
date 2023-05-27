@@ -1,3 +1,7 @@
+@font-face {
+    src: url('../fonts/NanumSquareNeo-cBd.ttf');
+}
+
 .label {
     -fx-font-family: "NanumSquare Neo Bold";
     -fx-font-size: 16;

@@ -378,11 +378,11 @@ public class GameView extends Pane {
     /* --- Events --- */
 
     @Getter @Builder @ToString
-    static class TileUpdateEvent implements Event {
+    public static class TileUpdateEvent implements Event {
 
         private Position position;
         private int action;
-        private long bombLeft;
+        private int bombLeft;
 
         public static final int ACTION_TILE_OPEN   = 0;
         public static final int ACTION_FLAG_PLACE  = 1;
@@ -390,14 +390,14 @@ public class GameView extends Pane {
     }
 
     @Getter @Builder @ToString
-    static class GameOverEvent implements Event {
+    public static class GameOverEvent implements Event {
 
         private int flagCount;
         private long time;
     }
 
     @Getter @AllArgsConstructor @ToString
-    static class GameWinEvent implements Event {
+    public static class GameWinEvent implements Event {
 
         private long time;
     }

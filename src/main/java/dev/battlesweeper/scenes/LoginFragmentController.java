@@ -1,5 +1,6 @@
 package dev.battlesweeper.scenes;
 
+import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.battlesweeper.Env;
 import dev.battlesweeper.Session;
@@ -60,7 +61,7 @@ public class LoginFragmentController implements Initializable, FragmentUpdater {
                     .build();
 
             try {
-                var response = new RESTRequestHandler(Env.SERVER_HOST_URL + "/auth")
+                var response = new RESTRequestHandler(Env.SERVER_HTTP_ENDPOINT + "/auth")
                         .post(body);
 
                 if (response.isPresent()) {
@@ -89,7 +90,8 @@ public class LoginFragmentController implements Initializable, FragmentUpdater {
                     session.tokenInfo = tokenInfo;
                     // TODO: Get username from server
                     //session.userName  = username;
-                    session.userName  = "더미";
+                    log.info(tokenInfo.getAccessToken());
+                    session.userName  = getUsernameFromToken(tokenInfo.getAccessToken());
                     log.info("auth success");
 
                     openFragment("PlayFragment");
@@ -126,5 +128,11 @@ public class LoginFragmentController implements Initializable, FragmentUpdater {
             }
         }
         return result;
+    }
+
+    private String getUsernameFromToken(String token) {
+        return JWT.decode(token)
+                .getClaim("name")
+                .asString();
     }
 }

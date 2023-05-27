@@ -50,9 +50,8 @@ public class RegisterFragmentController implements Initializable, FragmentUpdate
                             .password(inputPassword.getText())
                             .build())
                     .build();
-
             try {
-                var response = new RESTRequestHandler(Env.SERVER_HOST_URL + "/auth");
+                var response = new RESTRequestHandler(Env.SERVER_HTTP_ENDPOINT + "/auth");
                 //        .post(body, TokenResponse.class);
             } catch (Exception e) {
                 e.printStackTrace();

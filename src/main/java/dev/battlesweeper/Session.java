@@ -3,11 +3,14 @@ package dev.battlesweeper;
 import dev.battlesweeper.network.body.TokenInfo;
 import javafx.stage.Stage;
 
+import java.util.UUID;
+
 public class Session {
 
     public Stage rootStage;
     public String userName;
     public TokenInfo tokenInfo;
+    public UUID roomId;
 
     private Session() {}
     private static Session INSTANCE;

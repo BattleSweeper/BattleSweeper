@@ -55,7 +55,7 @@ public class AnonLoginFragmentController implements Initializable, FragmentUpdat
                     .build();
 
             try {
-                var response = new RESTRequestHandler(Env.SERVER_HOST_URL + "/auth")
+                var response = new RESTRequestHandler(Env.SERVER_HTTP_ENDPOINT + "/auth")
                         .postMessage(body, TokenInfo.class);
 
                 if (response.isPresent()) {

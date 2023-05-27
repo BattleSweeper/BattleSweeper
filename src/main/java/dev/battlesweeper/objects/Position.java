@@ -1,5 +1,10 @@
 package dev.battlesweeper.objects;
 
+import lombok.Builder;
+
+//@JsonSerialize(as = Position.class, using = PositionSerializer.class)
+//@JsonDeserialize(as = Position.class, using = PositionDeserializer.class)
+@Builder
 public record Position(int x, int y) {
 
     public boolean isNearby(Position other, int radius) {

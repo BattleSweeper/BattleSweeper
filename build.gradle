@@ -4,7 +4,8 @@ plugins {
     id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin' version '0.0.13'
     id 'org.beryx.jlink' version '2.25.0'
-    id "io.freefair.lombok" version "8.0.1"
+    id 'io.freefair.lombok' version '8.0.1'
+    id 'org.gradlex.extra-java-module-info' version '1.4'
 }
 
 group 'dev'
@@ -12,6 +13,7 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 ext {
@@ -35,6 +37,13 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
+extraJavaModuleInfo {
+    module("org.java-websocket:Java-WebSocket", "org.java_websocket") {
+        exportAllPackages()
+        requires('org.slf4j')
+    }
+}
+
 dependencies {
 
     implementation 'org.controlsfx:controlsfx:11.1.2'
@@ -42,10 +51,13 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
     implementation 'ch.qos.logback:logback-classic:1.4.7'
     implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'com.auth0:java-jwt:4.4.0'
 
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
 
+    //implementation 'org.gradlex:extra-java-module-info:1.4'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

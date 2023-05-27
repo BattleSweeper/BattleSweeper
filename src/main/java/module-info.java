@@ -8,6 +8,8 @@ module dev.battlesweeper {
     requires com.fasterxml.jackson.databind;
     requires org.controlsfx.controls;
     requires static lombok;
+    requires org.java_websocket;
+    requires com.auth0.jwt;
 
 
     opens dev.battlesweeper to javafx.fxml;
@@ -18,4 +20,8 @@ module dev.battlesweeper {
     opens dev.battlesweeper.scenes to javafx.fxml;
     exports dev.battlesweeper.network.body;
     opens dev.battlesweeper.network.body to com.fasterxml.jackson.databind;
+    exports dev.battlesweeper.objects.packet;
+    opens dev.battlesweeper.objects.packet to com.fasterxml.jackson.databind;
+    exports dev.battlesweeper.objects.json;
+    opens dev.battlesweeper.objects.json to com.fasterxml.jackson.databind;
 }

@@ -1,0 +1,63 @@
+@font-face {
+    src: url('../fonts/NanumSquareNeo-cBd.ttf');
+}
+@font-face {
+    src: url('../fonts/NanumSquareRoundB.ttf');
+}
+
+.root {
+    -fx-background-color: #f0f0f0;
+}
+
+.label {
+    -fx-font-family: "NanumSquareRound Bold";
+    -fx-text-fill: #000000;
+}
+
+.h1 {
+    -fx-font-size: 20;
+}
+
+.h2 {
+    -fx-font-size: 18;
+}
+
+.h3 {
+    -fx-font-size: 16;
+}
+
+.container {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-width: 0;
+    -fx-border-radius: 16;
+    -fx-pref-width: 330;
+    -fx-min-height: 58;
+}
+
+.element {
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-border-color: #ffffff00;
+    -fx-pref-width: 330;
+    -fx-min-height: 58;
+}
+
+.cell {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0;
+    -fx-background-radius: 16;
+    -fx-border-width: 0;
+    -fx-border-radius: 16;
+    -fx-border-color: #ffffff00;
+    -fx-pref-width: 320;
+    -fx-min-height: 58;
+}
+
+#gameBackground {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-width: 0;
+    -fx-border-radius: 16;
+    -fx-border-color: #ffffff00;
+}
