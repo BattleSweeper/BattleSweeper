@@ -121,23 +121,32 @@ public class GameView extends Pane {
         root1.getChildren().add(timer);
         root1.getChildren().add(labelFlagsLeft);
 
+        /*
+
         eventHandler.listenFor(TileUpdateEvent.class)
                 .subscribe(event -> {
-                    labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));
+                    if((totalBomb - flagCount)>0){
+                        labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));
+                    }
                 });
+
+         */
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1), event -> {
                     timerValue++;
+                    labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));  // 실시간 업데이트가 안되는 점이 있어 임시로 변경했습니다.
                     if (timerValue <= 999) {
                         timer.setText(Integer.toString(timerValue));
                     } else {
                         //timeline.stop();
                     }
+
                 })
         );
         timeline.setCycleCount(Animation.INDEFINITE); // 무한 반복 설정
         timeline.play();
+
 
 
         return root1;
@@ -295,7 +304,7 @@ public class GameView extends Pane {
         }
 
         public void open() {
-            if (isOpen())
+            if (isOpen() || isFlagged())
                 return;
 
             overlayImage.setVisible(false);
@@ -304,7 +313,8 @@ public class GameView extends Pane {
                         .flagCount(flagCount)
                         .time(getElapsedTime())
                         .build();
-                labelFlagsLeft.setText(String.valueOf(totalBomb));
+                totalBomb--;
+                state = STATE_OPEN;
                 eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
@@ -367,6 +377,8 @@ public class GameView extends Pane {
         public boolean hasBomb() {
             return this.bombCount == COUNT_BOMB;
         }
+
+
 
         private void setImageViewAttrs(ImageView image) {
             image.setFitWidth(TILE_SIZE);
