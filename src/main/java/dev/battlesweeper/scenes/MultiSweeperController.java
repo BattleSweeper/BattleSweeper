@@ -1,5 +1,6 @@
 package dev.battlesweeper.scenes;
 
+import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.battlesweeper.Session;
 import dev.battlesweeper.event.Event;
@@ -14,6 +15,7 @@ import dev.battlesweeper.widgets.GameView;
 import dev.battlesweeper.widgets.RankCellFactory;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -32,29 +34,35 @@ public class MultiSweeperController implements Initializable, GameUpdateCallback
     @FXML private Pane       gameViewContainer;
     @FXML private ListView<UserGameStatus> listViewRank;
 
-    private final List<UserGameStatus> rank = new ArrayList<>();
-    private ObjectMapper mapper;
-    private GameView gameView;
+    private final ObservableList<UserGameStatus> rank = FXCollections.observableArrayList();
+    private UserInfo      selfInfo;
+    private int           totalMines;
+    private ObjectMapper  mapper;
+    private GameView      gameView;
     private WebsocketTest socket;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        var claims = JWT.decode(Session.getInstance().tokenInfo.getAccessToken())
+                .getClaims();
+        selfInfo = new UserInfo(claims.get("uid").asLong(), claims.get("name").asString());
+
         mapper = new ObjectMapper();
         mapper.registerModule(new PacketHandlerModule());
 
         listViewRank.setCellFactory(new RankCellFactory());
-        listViewRank.setItems(FXCollections.observableList(rank));
+        listViewRank.setItems(rank);
 
         setupConnection(Session.getInstance().roomId, this);
     }
 
     @Override
     public void onGameStart(List<UserInfo> users, Position boardSize, Position[] mines) {
+        totalMines = mines.length;
         users.stream()
                 .map(v -> new UserGameStatus(v, 0, 0))
                 .forEach(rank::add);
         sortRank();
-        listViewRank.setItems(FXCollections.observableList(rank));
 
         log.info(Arrays.toString(mines));
         gameView = new GameView(700, 700, mines);
@@ -86,7 +94,16 @@ public class MultiSweeperController implements Initializable, GameUpdateCallback
 
     @Override
     public void onTileUpdate(UserInfo user, Position position, int action, int bombLeft) {
-
+        //if (Objects.equals(user.id(), selfInfo.id()))
+        //    return;
+        rank.stream()
+                .filter(v -> v.user().id().equals(user.id()))
+                .findFirst()
+                .ifPresent(v -> {
+                    log.info("flags: " + (totalMines - bombLeft));
+                    v.flags(bombLeft);
+                });
+        sortRank();
     }
 
     @Override
@@ -100,7 +117,12 @@ public class MultiSweeperController implements Initializable, GameUpdateCallback
     }
 
     private void sortRank() {
-        Collections.sort(rank);
+        Platform.runLater(() -> {
+            Collections.sort(rank);
+            int idx = 0;
+            for (var data : rank)
+                data.rank(++idx);
+        });
     }
 
     private void setupConnection(UUID roomId, GameUpdateCallback callback) {

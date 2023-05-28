@@ -2,6 +2,7 @@ package dev.battlesweeper.widgets;
 
 import dev.battlesweeper.objects.UserGameStatus;
 import dev.battlesweeper.utils.FontUtils;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -57,7 +58,7 @@ public class RankCellFactory implements Callback<ListView<UserGameStatus>, ListC
                 separatorLine.setFill(Paint.valueOf("#E1E1E1"));
                 view.getChildren().add(separatorLine);
 
-                setGraphic(view);
+                Platform.runLater(() -> setGraphic(view));
             }
         };
     }

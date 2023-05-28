@@ -60,13 +60,14 @@ public class GameView extends Pane {
     private final Font fontBold;
 
     //승리 조건을 임시로 계산하기 위한 변수
-    private int totalBomb = 0;
-    private int flagCount = 0;
+    private int totalBomb      = 0;
+    private int flagCount      = 0;
+    private int validFlagCount = 0;
     private long startTimeMillis;
 
     private int timerValue;
 
-    Text bombCount_text;
+    Text labelFlagsLeft;
 
     //이미지 경로
     Image imageFlagged = new Image(getIconPath(TILE_FLAGGED));
@@ -109,23 +110,21 @@ public class GameView extends Pane {
         Pane root1 = new BorderPane();
         TopBar topBar = new TopBar();
         Text timer = new Text(160,32,"0");
-        bombCount_text = new Text(450,32, String.valueOf(totalBomb));
+        labelFlagsLeft = new Text(450,32, String.valueOf(totalBomb));
 
         timer.setFont(fontBold);
-        bombCount_text.setFont(fontBold);
+        labelFlagsLeft.setFont(fontBold);
 
         root1.setLayoutX(50);
         root1.setLayoutY(30);
         root1.getChildren().add(topBar.topBarImage);
         root1.getChildren().add(timer);
-        root1.getChildren().add(bombCount_text);
+        root1.getChildren().add(labelFlagsLeft);
 
-
-        setOnMouseClicked(e-> {
-            if (e.getButton() == MouseButton.SECONDARY) {
-                bombCount_text.setText(String.valueOf(totalBomb-flagCount));
-            }
-        });
+        eventHandler.listenFor(TileUpdateEvent.class)
+                .subscribe(event -> {
+                    labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));
+                });
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1), event -> {
@@ -305,7 +304,7 @@ public class GameView extends Pane {
                         .flagCount(flagCount)
                         .time(getElapsedTime())
                         .build();
-                bombCount_text.setText(String.valueOf(totalBomb));
+                labelFlagsLeft.setText(String.valueOf(totalBomb));
                 eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
@@ -319,12 +318,13 @@ public class GameView extends Pane {
         }
 
         public void flag() {
-            if (isOpen())
+            if (isOpen() || flagCount >= totalBomb)
                 return;
 
             if (isFlagged()) {
+                flagCount--;
                 if (hasBomb())
-                    flagCount--;
+                    validFlagCount--;
 
                 state = STATE_DEFAULT;
                 overlayImage.setImage(imageUnrevealed);
@@ -332,14 +332,15 @@ public class GameView extends Pane {
                 return;
             }
 
+            flagCount++;
             if (hasBomb()) {
-                flagCount++;
+                validFlagCount++;
             }
             state = STATE_FLAGGED;
             overlayImage.setImage(imageFlagged);
             notifyUpdate(TileUpdateEvent.ACTION_FLAG_PLACE);
 
-            if (flagCount >= totalBomb) {
+            if (validFlagCount >= totalBomb) {
                 var event = new GameWinEvent(getElapsedTime());
                 eventHandler.fireEvent(event);
                 System.out.println("You Win!");
