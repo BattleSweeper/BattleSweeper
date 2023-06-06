@@ -121,21 +121,20 @@ public class GameView extends Pane {
         root1.getChildren().add(timer);
         root1.getChildren().add(labelFlagsLeft);
 
-        /*
+
 
         eventHandler.listenFor(TileUpdateEvent.class)
                 .subscribe(event -> {
-                    if((totalBomb - flagCount)>0){
+                    if((totalBomb - flagCount)>=0){
                         labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));
                     }
                 });
 
-         */
+
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1), event -> {
                     timerValue++;
-                    labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));  // 실시간 업데이트가 안되는 점이 있어 임시로 변경했습니다.
                     if (timerValue <= 999) {
                         timer.setText(Integer.toString(timerValue));
                     } else {
@@ -318,6 +317,7 @@ public class GameView extends Pane {
                 eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
+                notifyUpdate(TileUpdateEvent.ACTION_TILE_OPEN);
                 return;
             }
             state = STATE_OPEN;

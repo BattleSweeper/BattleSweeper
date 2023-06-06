@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="380.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.EmailCheckFragmentController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="20.0" prefHeight="380.0" prefWidth="360.0" spacing="10.0">
+         <children>
+            <VBox alignment="CENTER" spacing="4.0" styleClass="button-full">
+               <children>
+                  <Label styleClass="title" text="🚩신규 계정 생성" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4.0">
+               <children>
+                  <Label text="EMAIL" />
+                  <TextField fx:id="inputEmail" styleClass="button-full" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <Button fx:id="buttonEmailAuth" mnemonicParsing="false" prefWidth="250.0" styleClass="container" text="이메일 인증" />
+               </children>
+            </HBox>
+            <VBox alignment="CENTER" spacing="4.0">
+               <children>
+                  <Label text="인증 코드" />
+                  <TextField fx:id="inputAuthCode" styleClass="button-full" />
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Button fx:id="buttonPrev" mnemonicParsing="false" prefWidth="60.0" styleClass="container" text="&lt;" />
+                        <Button fx:id="buttonAuthCodeCheck" mnemonicParsing="false" prefWidth="250.0" styleClass="container" text="인증 코드 확인" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" spacing="10.0" />
+   </children>
+   <stylesheets>
+      <URL value="@styles/fragment.css" />
+      <URL value="@styles/container.css" />
+   </stylesheets>
+</AnchorPane>

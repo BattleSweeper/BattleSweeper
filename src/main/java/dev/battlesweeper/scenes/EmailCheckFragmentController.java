@@ -13,11 +13,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RegisterFragmentController implements Initializable, FragmentUpdater {
+public class EmailCheckFragmentController implements Initializable, FragmentUpdater {
 
-    @FXML private TextField inputUsername;
-    @FXML private TextField inputPassword;
-    @FXML private Button    buttonSubmit;
+    @FXML private TextField inputEmail;
+    @FXML private TextField inputAuthCode;
+    @FXML private Button    buttonEmailAuth;
+    @FXML private Button    buttonAuthCodeCheck;
     @FXML private Button    buttonPrev;
 
     private HomeController parentController;
@@ -29,32 +30,28 @@ public class RegisterFragmentController implements Initializable, FragmentUpdate
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         buttonPrev.setOnAction(event -> {
             try {
-                parentController.setFragment(ResourceUtils.getResource("EmailCheckFragment.fxml"));
+                parentController.setFragment(ResourceUtils.getResource("WelcomeFragment.fxml"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        buttonAuthCodeCheck.setOnAction(event -> {
+            if (!checkInputSanity(inputEmail, inputAuthCode))
+                return;
+            try {
+                parentController.setFragment(ResourceUtils.getResource("RegisterFragment.fxml"));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
 
-        buttonSubmit.setOnAction(event -> {
-            if (!checkInputSanity(inputUsername, inputPassword))
+        buttonEmailAuth.setOnAction(event -> {
+            if (!checkInputSanity(inputEmail))
                 return;
-
-            var body = AuthRequest.builder()
-                    .type(AuthRequest.TYPE_REGISTERED)
-                    .info(AuthRequest.AuthInfo.builder()
-                            .password(inputPassword.getText())
-                            .build())
-                    .build();
-            try {
-                var response = new RESTRequestHandler(Env.SERVER_HTTP_ENDPOINT + "/auth");
-                //        .post(body, TokenResponse.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         });
+
     }
 
     private boolean checkInputSanity(TextField ...fields) {

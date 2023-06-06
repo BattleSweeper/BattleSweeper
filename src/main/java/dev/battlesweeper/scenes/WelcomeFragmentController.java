@@ -42,7 +42,7 @@ public class WelcomeFragmentController implements Initializable, FragmentUpdater
         });
 
         buttonRegister.setOnAction(event -> {
-            setFragment(ResourceUtils.getResource("RegisterFragment.fxml"));
+            setFragment(ResourceUtils.getResource("EmailCheckFragment.fxml"));
         });
 
         buttonAnonymous.setOnAction(event -> {
