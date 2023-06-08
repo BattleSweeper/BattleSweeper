@@ -60,6 +60,7 @@ public class GameView extends Pane {
     private final Font fontBold;
 
     //승리 조건을 임시로 계산하기 위한 변수
+    // 게임중에 변경되면 안됩니다(Constant)
     private int totalBomb      = 0;
     private int flagCount      = 0;
     private int validFlagCount = 0;
@@ -121,16 +122,10 @@ public class GameView extends Pane {
         root1.getChildren().add(timer);
         root1.getChildren().add(labelFlagsLeft);
 
-
-
         eventHandler.listenFor(TileUpdateEvent.class)
                 .subscribe(event -> {
-                    if((totalBomb - flagCount)>=0){
-                        labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));
-                    }
+                    labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));
                 });
-
-
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1), event -> {
@@ -140,12 +135,10 @@ public class GameView extends Pane {
                     } else {
                         //timeline.stop();
                     }
-
                 })
         );
         timeline.setCycleCount(Animation.INDEFINITE); // 무한 반복 설정
         timeline.play();
-
 
 
         return root1;
@@ -312,12 +305,10 @@ public class GameView extends Pane {
                         .flagCount(flagCount)
                         .time(getElapsedTime())
                         .build();
-                totalBomb--;
-                state = STATE_OPEN;
+                labelFlagsLeft.setText(String.valueOf(totalBomb));
                 eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
-                notifyUpdate(TileUpdateEvent.ACTION_TILE_OPEN);
                 return;
             }
             state = STATE_OPEN;
@@ -328,7 +319,7 @@ public class GameView extends Pane {
         }
 
         public void flag() {
-            if (isOpen() || flagCount >= totalBomb)
+            if (isOpen())
                 return;
 
             if (isFlagged()) {
@@ -340,7 +331,8 @@ public class GameView extends Pane {
                 overlayImage.setImage(imageUnrevealed);
                 notifyUpdate(TileUpdateEvent.ACTION_FLAG_REMOVE);
                 return;
-            }
+            } else if (flagCount >= totalBomb)
+                return;
 
             flagCount++;
             if (hasBomb()) {
@@ -377,8 +369,6 @@ public class GameView extends Pane {
         public boolean hasBomb() {
             return this.bombCount == COUNT_BOMB;
         }
-
-
 
         private void setImageViewAttrs(ImageView image) {
             image.setFitWidth(TILE_SIZE);
