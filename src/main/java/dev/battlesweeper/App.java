@@ -28,6 +28,9 @@ public class App extends Application {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.setTitle("BattleSweeper Application");
+            stage.setOnCloseRequest(event -> {
+                System.exit(0);
+            });
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
