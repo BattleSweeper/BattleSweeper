@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +36,7 @@ public class HomeController implements Initializable {
 
     private long matchStartMillis;
     private Timer timeCountTimer;
+    private Runnable onDialogDismiss;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -52,7 +52,11 @@ public class HomeController implements Initializable {
         }
     }
 
-    void showMatchDialog() {
+    void showMatchDialog(Runnable onDismiss) {
+        if (onDialogDismiss != null)
+            hideMatchDialog();
+        onDialogDismiss = onDismiss;
+
         setupTimeCountTimer();
         var transition = new TranslateTransition(Duration.millis(700));
         transition.setInterpolator(new Interpolator() {
@@ -84,6 +88,11 @@ public class HomeController implements Initializable {
             matchmakingDialog.setVisible(false);
             cancelTimeCountTimer();
         });
+
+        if (onDialogDismiss != null) {
+            onDialogDismiss.run();
+            onDialogDismiss = null;
+        }
 
         transition.play();
     }
