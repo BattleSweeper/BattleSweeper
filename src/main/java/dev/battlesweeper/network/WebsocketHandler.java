@@ -3,11 +3,9 @@ package dev.battlesweeper.network;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.battlesweeper.Env;
-import dev.battlesweeper.Session;
 import dev.battlesweeper.event.Event;
 import dev.battlesweeper.event.EventHandler;
 import dev.battlesweeper.event.MutableEventHandler;
-import dev.battlesweeper.network.body.TokenInfo;
 import dev.battlesweeper.objects.json.PacketHandlerModule;
 import dev.battlesweeper.objects.packet.Packet;
 import lombok.Builder;
@@ -23,16 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class WebsocketTest extends WebSocketClient {
+public class WebsocketHandler extends WebSocketClient {
 
     private final ObjectMapper mapper;
     private final MutableEventHandler eventHandler;
 
-    public WebsocketTest(String path) throws URISyntaxException {
+    public WebsocketHandler(String path) throws URISyntaxException {
         this(path, new HashMap<>());
     }
 
-    public WebsocketTest(String path, Map<String, String> headers) throws URISyntaxException {
+    public WebsocketHandler(String path, Map<String, String> headers) throws URISyntaxException {
         super(new URI(Env.SERVER_WSS_ENDPOINT + path));
 
         eventHandler = new MutableEventHandler();

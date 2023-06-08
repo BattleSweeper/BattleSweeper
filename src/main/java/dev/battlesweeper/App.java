@@ -1,7 +1,5 @@
 package dev.battlesweeper;
 
-import dev.battlesweeper.network.WebsocketTest;
-import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.battlesweeper.Session;
 import dev.battlesweeper.event.Event;
-import dev.battlesweeper.network.WebsocketTest;
+import dev.battlesweeper.network.WebsocketHandler;
 import dev.battlesweeper.objects.GameUpdateCallback;
 import dev.battlesweeper.objects.Position;
 import dev.battlesweeper.objects.UserGameStatus;
@@ -39,7 +39,7 @@ public class MultiSweeperController implements Initializable, GameUpdateCallback
     private int           totalMines;
     private ObjectMapper  mapper;
     private GameView      gameView;
-    private WebsocketTest socket;
+    private WebsocketHandler socket;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -130,9 +130,9 @@ public class MultiSweeperController implements Initializable, GameUpdateCallback
             final var headers = new HashMap<String, String>();
             headers.put("room-id", roomId.toString());
 
-            socket = new WebsocketTest("/room", headers);
+            socket = new WebsocketHandler("/room", headers);
             socket.getEventHandler()
-                    .listenFor(WebsocketTest.PacketEvent.class)
+                    .listenFor(WebsocketHandler.PacketEvent.class)
                     .subscribe(packetEvent -> {
                         var packet = packetEvent.getPacket();
                         log.info(packet.toString());

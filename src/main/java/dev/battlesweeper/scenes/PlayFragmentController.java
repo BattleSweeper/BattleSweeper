@@ -6,7 +6,7 @@ import dev.battlesweeper.Env;
 import dev.battlesweeper.Session;
 import dev.battlesweeper.network.Message;
 import dev.battlesweeper.network.RESTRequestHandler;
-import dev.battlesweeper.network.WebsocketTest;
+import dev.battlesweeper.network.WebsocketHandler;
 import dev.battlesweeper.network.body.TokenInfo;
 import dev.battlesweeper.objects.GameQueueCallback;
 import dev.battlesweeper.objects.Position;
@@ -145,7 +145,7 @@ public class PlayFragmentController implements Initializable, FragmentUpdater {
             garbage.add(evPacket);
 
             var evClose = wsTest.getEventHandler()
-                    .listenFor(WebsocketTest.CloseEvent.class)
+                    .listenFor(WebsocketHandler.CloseEvent.class)
                     .subscribe(closeEvent -> {
                         garbage.forEach(Disposable::dispose);
                         garbage.clear();
