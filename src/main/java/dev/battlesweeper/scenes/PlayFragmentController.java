@@ -59,24 +59,23 @@ public class PlayFragmentController implements Initializable, FragmentUpdater, E
         labelWelcomeText.setText(labelWelcomeText.getText().replace("NAME", username));
 
         buttonSolo.setOnAction(event -> {
-            var mines = BoardGenerator.generateMines(new Position(16, 16), 40);
-            var gameScene = new GameView(700, 700, mines);
-            gameScene.setOpacity(0);
-
-            TransitionUtils.crossFade(
-                    parentController.container.getScene().getRoot(),
-                    gameScene,
-                    Duration.millis(300),
-                    v -> parentController.container.getScene().setRoot(gameScene),
-                    null
-            );
+            try {
+                AnchorPane gameScene = FXMLLoader.load(ResourceUtils.getResource("SoloSweeperScene.fxml"));
+                var scene = parentController.container.getScene();
+                if (scene != null)
+                    scene.setRoot(gameScene);
+                else
+                    log.error("Scene == null");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         buttonDuo.setOnAction(this);
         buttonBattle.setOnAction(this);
 
         buttonSettings.setOnAction(event -> {
-
+            setFragment(ResourceUtils.getResource("SettingFragment.fxml"));
         });
 
         buttonExit.setOnAction(event -> {
@@ -175,6 +174,13 @@ public class PlayFragmentController implements Initializable, FragmentUpdater, E
             wsTest.connect();
             return wsTest;
         } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void setFragment(URL url) {
+        try {
+            parentController.setFragment(url);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="container" prefHeight="800.0" prefWidth="1200.0" stylesheets="@styles/game.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.SoloSweeperSceneController">
+   <children>
+      <Pane id="gameBackground" layoutX="60.0" layoutY="10.0" prefHeight="750.0" prefWidth="700.0" />
+      <Pane fx:id="gameViewContainer" layoutX="60.0" layoutY="-10.0" prefHeight="800.0" prefWidth="700.0" />
+      <VBox layoutX="810.0" layoutY="72.0" prefHeight="688.0" prefWidth="330.0" spacing="20.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="330.0" spacing="10.0">
+               <children>
+                  <Button fx:id="buttonPrev" mnemonicParsing="false" prefHeight="58.0" prefWidth="350.0" styleClass="container" text="🏠 홈으로">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+                  <Button fx:id="buttonPause" mnemonicParsing="false" prefHeight="58.0" prefWidth="173.0" styleClass="container" text="⏸ 일시정지">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+               </children>
+            </HBox>
+            <Label alignment="CENTER" contentDisplay="TOP" prefHeight="43.0" prefWidth="148.0" text="최고 기록">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <ListView fx:id="listViewRank" mouseTransparent="true" prefHeight="569.0">
+               <styleClass>
+                  <String fx:value="element" />
+                  <String fx:value="container" />
+               </styleClass>
+               <padding>
+                  <Insets top="12.0" />
+               </padding>
+            </ListView>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
