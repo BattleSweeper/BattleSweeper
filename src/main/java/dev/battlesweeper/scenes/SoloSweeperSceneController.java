@@ -42,80 +42,61 @@ public class SoloSweeperSceneController implements Initializable{
 
     private int score;
 
-    private HomeController parentController;
-
-    private ArrayList<Integer> list = new ArrayList<>();
-
-
-    public void setParent(Initializable parent) {
-        this.parentController = (HomeController) parent;
-    }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        var mines = BoardGenerator.generateMines(new Position(16, 16), 40);
-        totalMines = mines.length;
-
-
         listViewRank.setCellFactory(new RankCellFactory());
         listViewRank.setItems(rank);
 
-        log.info(Arrays.toString(mines));
-        gameView = new GameView(700, 700, mines);
-        gameView.getEventHandler()
-                .listenFor(Event.class)
-                .subscribe(event -> {
-                    Packet packet = null;
-                    if (event instanceof GameView.GameWinEvent){
-                        var username = Session.getInstance().userName;
-                        score = 1000 - gameView.timerValue - gameView.explodedBomb*25;
-                        long rankid = 1;
-                        UserGameStatus userGameStatus = new UserGameStatus(new UserInfo(rankid, username), rank.size() + 1, score);
-                        userGameStatus.rank(rank.size() + 1);
-                        userGameStatus.flags(score);
-                        rank.add(userGameStatus);
-                        sortRank();
-
-                        rankid++;
-
-                    }else if (event instanceof GameView.GameOverEvent){ // 테스트용
-                        var username = Session.getInstance().userName;
-                        score = 1000 - gameView.timerValue - gameView.explodedBomb*25;
-                        long rankid = 1;
-                        UserGameStatus userGameStatus = new UserGameStatus(new UserInfo(rankid, username), rank.size() + 1, score);
-                        userGameStatus.rank(rank.size() + 1);
-                        userGameStatus.flags(score);
-                        rank.add(userGameStatus);
-                        rank.stream().findFirst();
-                        sortRank();
-
-                        rankid++;
-
-                    }
-
-                });
-
-        Platform.runLater(() -> {
-            gameViewContainer.getChildren().add(gameView);
-        });
-
-        buttonReset.setOnAction(event -> {
-            var mines_2 = BoardGenerator.generateMines(new Position(16, 16), 40);
-            totalMines = mines_2.length;
+        buttonReset.setOnAction(resetevent -> {
+            var mines = BoardGenerator.generateMines(new Position(16, 16), 40);
+            totalMines = mines.length;
             sortRank();
 
-            log.info(Arrays.toString(mines_2));
-            gameView = new GameView(700, 700, mines_2);
+            log.info(Arrays.toString(mines));
+            gameView = new GameView(700, 700, mines);
+
+            gameView.getEventHandler()
+                    .listenFor(Event.class)
+                    .subscribe(event -> {
+                        if (event instanceof GameView.GameWinEvent){
+                            var username = Session.getInstance().userName;
+                            score = 1000 - gameView.timerValue - gameView.explodedBomb*25;
+
+                            rank.stream()
+                                    .findFirst()
+                                    .ifPresent(v -> {
+                                        log.info("flags: " + (totalMines - gameView.explodedBomb));
+                                        v.flags(score);
+                                        sortRank();
+                                    });
+
+                            long rankid = 1;
+                            UserGameStatus userGameStatus = new UserGameStatus(new UserInfo(rankid, username), rank.size() + 1, score);
+                            userGameStatus.rank(rank.size() + 1);
+                            userGameStatus.flags(score);
+                            rank.add(userGameStatus);
+                            sortRank();
+
+                            rankid++;
+                        }else if(event instanceof GameView.GameOverEvent){
+                            gameView.setDisable(true);
+                        }
+
+                    });
+
 
             Platform.runLater(() -> {
                 // 게임 뷰 초기화 코드
                 gameViewContainer.getChildren().clear();
                 gameViewContainer.getChildren().add(gameView);
             });
+
         });
 
+        buttonReset.fire();
 
 
     }

@@ -310,7 +310,6 @@ public class GameView extends Pane {
                         .time(getElapsedTime())
                         .build();
                 explodedBomb++;
-                state = STATE_OPEN;
                 eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
@@ -409,4 +408,6 @@ public class GameView extends Pane {
 
         private long time;
     }
+
+
 }
