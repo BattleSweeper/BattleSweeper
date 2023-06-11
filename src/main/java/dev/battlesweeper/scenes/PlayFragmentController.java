@@ -38,7 +38,7 @@ public class PlayFragmentController implements Initializable, FragmentUpdater, E
     @FXML private Button buttonExit;
 
     // True 시 게임 대기열 인원 수 무시 (무조건 바로 매치매이킹)
-    private static final boolean BYPASS_QUEUE_SIZE = true;
+    private static final boolean BYPASS_QUEUE_SIZE = false;
 
     private HomeController parentController;
     private WebsocketHandler socketHandler;

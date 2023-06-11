@@ -12,6 +12,9 @@ public class Session {
     public TokenInfo tokenInfo;
     public UUID roomId;
 
+    public String email;
+    public String code;
+
     private Session() {}
     private static Session INSTANCE;
     public static Session getInstance() {

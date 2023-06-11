@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="380.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.EmailCheckFragmentController">
+<AnchorPane prefHeight="380.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.battlesweeper.scenes.EmailCheckFragmentController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="20.0" prefHeight="380.0" prefWidth="360.0" spacing="10.0">
          <children>
@@ -41,6 +46,7 @@
                   </HBox>
                </children>
             </VBox>
+            <ProgressIndicator fx:id="progress" opacity="0.0" />
          </children>
       </VBox>
       <HBox alignment="CENTER" spacing="10.0" />
