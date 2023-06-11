@@ -1,7 +1,6 @@
 package dev.battlesweeper.scenes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import dev.battlesweeper.BoardGenerator;
 import dev.battlesweeper.Env;
 import dev.battlesweeper.Session;
 import dev.battlesweeper.network.Message;
@@ -9,12 +8,9 @@ import dev.battlesweeper.network.RESTRequestHandler;
 import dev.battlesweeper.network.WebsocketHandler;
 import dev.battlesweeper.network.body.TokenInfo;
 import dev.battlesweeper.objects.GameQueueCallback;
-import dev.battlesweeper.objects.Position;
 import dev.battlesweeper.objects.packet.GameFoundPacket;
 import dev.battlesweeper.utils.ResourceUtils;
 import dev.battlesweeper.utils.TimerUtils;
-import dev.battlesweeper.utils.TransitionUtils;
-import dev.battlesweeper.widgets.GameView;
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,7 +20,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -43,7 +38,7 @@ public class PlayFragmentController implements Initializable, FragmentUpdater, E
     @FXML private Button buttonExit;
 
     // True 시 게임 대기열 인원 수 무시 (무조건 바로 매치매이킹)
-    private static final boolean BYPASS_QUEUE_SIZE = false;
+    private static final boolean BYPASS_QUEUE_SIZE = true;
 
     private HomeController parentController;
     private WebsocketHandler socketHandler;
