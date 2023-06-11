@@ -23,7 +23,7 @@
                      <font>
                         <Font size="20.0" />
                      </font></Button>
-                  <Button fx:id="buttonPause" mnemonicParsing="false" prefHeight="58.0" prefWidth="173.0" styleClass="container" text="⏸ 일시정지">
+                  <Button fx:id="buttonReset" mnemonicParsing="false" prefHeight="58.0" prefWidth="173.0" styleClass="container" text="🔃 초기화">
                      <font>
                         <Font size="20.0" />
                      </font></Button>

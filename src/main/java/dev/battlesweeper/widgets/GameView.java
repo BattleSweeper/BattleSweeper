@@ -61,12 +61,16 @@ public class GameView extends Pane {
 
     //승리 조건을 임시로 계산하기 위한 변수
     // 게임중에 변경되면 안됩니다(Constant)
-    private int totalBomb      = 0;
+    public int totalBomb      = 0;
     private int flagCount      = 0;
     private int validFlagCount = 0;
+
+    public int explodedBomb = 0;
     private long startTimeMillis;
 
-    private int timerValue;
+    public int timerValue;
+
+
 
     Text labelFlagsLeft;
 
@@ -124,7 +128,7 @@ public class GameView extends Pane {
 
         eventHandler.listenFor(TileUpdateEvent.class)
                 .subscribe(event -> {
-                    labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount));
+                    labelFlagsLeft.setText(String.valueOf(totalBomb - flagCount - explodedBomb));
                 });
 
         Timeline timeline = new Timeline(
@@ -305,7 +309,8 @@ public class GameView extends Pane {
                         .flagCount(flagCount)
                         .time(getElapsedTime())
                         .build();
-                labelFlagsLeft.setText(String.valueOf(totalBomb));
+                explodedBomb++;
+                state = STATE_OPEN;
                 eventHandler.fireEvent(event);
                 System.out.println("Game Over");
                 //scene.setRoot(createContent());
